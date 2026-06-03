@@ -1,0 +1,46 @@
+@import "tailwindcss";
+.card-member {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border: 1px solid #f3f4f6;
+  border-radius: 1rem;
+}
+
+.card-avatar {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 9999px;
+  background: #1a2e4a;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-role {
+  font-size: 0.7rem;
+  color: #e63946;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.card-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #1a2e4a;
+  margin-bottom: 0.35rem;
+}
+
+.card-desc {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.6;
+}

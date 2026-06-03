@@ -1,0 +1,65 @@
+---
+import Layout from '../../layouts/Layout.astro'
+
+const noticies = [
+  {
+    data: '03 Jun 2025',
+    tag: 'Negociació',
+    titol: "Nova convocatòria de mesa de negociació col·lectiva a l'Ajuntament de Barcelona",
+    resum: "S'ha convocat una nova reunió de la mesa de negociació col·lectiva per tractar les condicions laborals del personal de l'Ajuntament de Barcelona per al proper any.",
+  },
+  {
+    data: '28 Mai 2025',
+    tag: 'Permisos',
+    titol: 'Actualització dels permisos i llicències per a empleats públics 2025',
+    resum: "El Departament de Recursos Humans ha publicat l'actualització dels permisos i llicències aplicables als treballadors de l'administració pública catalana per a l'any 2025.",
+  },
+  {
+    data: '15 Mai 2025',
+    tag: 'Assemblea',
+    titol: "Assemblea d'afiliats ÁBACOS: resum i acords adoptats",
+    resum: "Es va celebrar l'assemblea anual d'afiliats d'ÁBACOS on es van debatre i aprovar els principals acords per a la defensa dels drets laborals dels treballadors públics.",
+  },
+  {
+    data: '02 Mai 2025',
+    tag: 'Drets laborals',
+    titol: 'Guia pràctica sobre el dret a la desconnexió digital',
+    resum: "ÁBACOS publica una guia pràctica per als treballadors públics sobre el dret a la desconnexió digital fora de l'horari laboral.",
+  },
+  {
+    data: '18 Abr 2025',
+    tag: 'Formació',
+    titol: 'Nou curs de formació sindical per a delegats i afiliats',
+    resum: 'ÁBACOS organitza un curs de formació sindical adreçat als delegats i afiliats per reforçar els coneixements en matèria de drets laborals i negociació col·lectiva.',
+  },
+]
+---
+
+<Layout title="Notícies" lang="ca" altLangUrl="/es/noticias"  description="Darreres notícies i actualitzacions d'ÁBACOS, sindicat de l'Ajuntament de Barcelona." >
+
+  <section class="max-w-5xl mx-auto px-6 py-16">
+    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">Actualitat</p>
+    <h1 class="text-3xl font-medium text-[#1a2e4a] mb-4">Notícies i blog</h1>
+    <p class="text-sm text-gray-500 leading-relaxed max-w-2xl mb-12">
+      Informació actualitzada sobre negociació col·lectiva, drets laborals, permisos i tot allò que afecta els treballadors públics de Barcelona i Catalunya.
+    </p>
+
+    <div class="flex flex-col divide-y divide-gray-100">
+      {noticies.map((n) => (
+        <div class="py-8 flex gap-8">
+          <div class="min-w-[90px]">
+            <p class="text-xs text-gray-400">{n.data}</p>
+          </div>
+          <div class="flex-1">
+            <span class="inline-block text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full mb-3">{n.tag}</span>
+            <h2 class="text-base font-medium text-[#1a2e4a] mb-2">{n.titol}</h2>
+            <p class="text-sm text-gray-500 leading-relaxed mb-4">{n.resum}</p>
+            <a href="#" class="text-xs text-[#e63946] hover:underline">Llegir més →</a>
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </section>
+
+</Layout>

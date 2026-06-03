@@ -1,0 +1,205 @@
+---
+import '../styles/global.css'
+
+interface Props {
+  title: string
+  description?: string
+  lang?: string
+  altLangUrl?: string
+}
+
+const { title, description = "Sindicat de treballadors de l'Ajuntament de Barcelona i Administracions de Catalunya", lang = 'ca', altLangUrl } = Astro.props
+
+const isCa = lang === 'ca'
+const prefix = `/${lang}`
+
+const defaultAltUrl = isCa
+  ? Astro.url.href.replace('/ca/', '/es/')
+  : Astro.url.href.replace('/es/', '/ca/')
+
+const altUrl = altLangUrl ?? defaultAltUrl
+
+const links = {
+  quiSom: isCa ? `${prefix}/qui-som` : `${prefix}/quienes-somos`,
+  noticies: isCa ? `${prefix}/noticies` : `${prefix}/noticias`,
+  documents: isCa ? `${prefix}/documents` : `${prefix}/documentos`,
+  contacte: isCa ? `${prefix}/contacte` : `${prefix}/contacto`,
+  afiliacio: isCa ? `${prefix}/afiliacio` : `${prefix}/afiliacion`,
+  avisLegal: isCa ? `${prefix}/avis-legal` : `${prefix}/aviso-legal`,
+  privacitat: isCa ? `${prefix}/privacitat` : `${prefix}/privacidad`,
+  cookies: `${prefix}/cookies`,
+}
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="alternate" hreflang="ca" href={Astro.url.href.replace(`/${lang}/`, '/ca/')} />
+    <link rel="alternate" hreflang="es" href={Astro.url.href.replace(`/${lang}/`, '/es/')} />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    <title>{title} | ÁBACOS Sindicat</title>
+  </head>
+  <body class="bg-white text-gray-800 font-sans">
+
+    <!-- Banner de cookies -->
+    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-50 bg-[#111e30] border-t border-[#1a2e4a] p-4 hidden">
+      <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-white mb-1">{isCa ? 'Utilitzem cookies' : 'Utilizamos cookies'}</p>
+          <p class="text-xs text-blue-200 leading-relaxed">
+            {isCa ? "Usem cookies pròpies i de tercers per millorar la teva experiència i analitzar el trànsit. Pots acceptar-les totes, rebutjar-les o configurar les teves preferències." : "Usamos cookies propias y de terceros para mejorar tu experiencia y analizar el tráfico. Puedes aceptarlas todas, rechazarlas o configurar tus preferencias."}
+            <a href={links.cookies} class="underline text-white ml-1">{isCa ? 'Més informació' : 'Más información'}</a>
+          </p>
+          <div class="flex gap-4 mt-2">
+            <label class="flex items-center gap-1.5 text-xs text-blue-200">
+              <input type="checkbox" checked disabled class="accent-white" /> {isCa ? 'Necessàries' : 'Necesarias'}
+            </label>
+            <label class="flex items-center gap-1.5 text-xs text-blue-200 cursor-pointer">
+              <input type="checkbox" id="cookie-analytics" class="accent-white" /> {isCa ? 'Analítiques' : 'Analíticas'}
+            </label>
+            <label class="flex items-center gap-1.5 text-xs text-blue-200 cursor-pointer">
+              <input type="checkbox" id="cookie-marketing" class="accent-white" /> {isCa ? 'Màrqueting' : 'Marketing'}
+            </label>
+          </div>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <button id="cookie-reject" class="text-xs text-blue-200 border border-blue-200 border-opacity-30 px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+            {isCa ? 'Rebutjar' : 'Rechazar'}
+          </button>
+          <button id="cookie-config" class="text-xs text-blue-200 border border-blue-200 border-opacity-30 px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+            {isCa ? 'Guardar preferències' : 'Guardar preferencias'}
+          </button>
+          <button id="cookie-accept" class="text-xs text-white bg-[#e63946] px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+            {isCa ? 'Acceptar totes' : 'Aceptar todas'}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const banner = document.getElementById('cookie-banner')
+      const acceptBtn = document.getElementById('cookie-accept')
+      const rejectBtn = document.getElementById('cookie-reject')
+      const configBtn = document.getElementById('cookie-config')
+
+      if (!localStorage.getItem('cookies-consent')) {
+        banner?.classList.remove('hidden')
+      }
+
+      acceptBtn?.addEventListener('click', () => {
+        localStorage.setItem('cookies-consent', 'all')
+        banner?.classList.add('hidden')
+      })
+
+      rejectBtn?.addEventListener('click', () => {
+        localStorage.setItem('cookies-consent', 'none')
+        banner?.classList.add('hidden')
+      })
+
+      configBtn?.addEventListener('click', () => {
+        const analytics = (document.getElementById('cookie-analytics') as HTMLInputElement)?.checked
+        const marketing = (document.getElementById('cookie-marketing') as HTMLInputElement)?.checked
+        localStorage.setItem('cookies-consent', JSON.stringify({ analytics, marketing }))
+        banner?.classList.add('hidden')
+      })
+    </script>
+
+    <!-- Navbar -->
+    <nav class="border-b border-gray-100 sticky top-0 bg-white z-50">
+      <div class="max-w-5xl mx-auto px-6 flex items-center justify-between h-14">
+        <a href={`${prefix}/`}>
+          <img src="/abacos-logo.png" alt="ÁBACOS Sindicat" class="h-8" />
+        </a>
+
+        <!-- Links desktop -->
+        <div class="hidden md:flex gap-6">
+          <a href={links.quiSom} class="text-sm text-gray-500 hover:text-gray-800">{isCa ? 'Qui som' : 'Quiénes somos'}</a>
+          <a href={links.noticies} class="text-sm text-gray-500 hover:text-gray-800">{isCa ? 'Notícies' : 'Noticias'}</a>
+          <a href={links.documents} class="text-sm text-gray-500 hover:text-gray-800">{isCa ? 'Documents' : 'Documentos'}</a>
+          <a href={links.contacte} class="text-sm text-gray-500 hover:text-gray-800">{isCa ? 'Contacte' : 'Contacto'}</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="flex gap-1 text-xs">
+            <a href={isCa ? Astro.url.href : altUrl} class={`px-2 py-1 rounded transition-colors ${lang === 'ca' ? 'bg-[#1a2e4a] text-white' : 'text-gray-400 hover:text-gray-700'}`}>CA</a>
+            <a href={isCa ? altUrl : Astro.url.href} class={`px-2 py-1 rounded transition-colors ${lang === 'es' ? 'bg-[#1a2e4a] text-white' : 'text-gray-400 hover:text-gray-700'}`}>ES</a>
+          </div>
+          <a href={links.afiliacio} class="hidden md:block bg-[#e63946] text-white text-xs px-4 py-2 rounded hover:bg-red-700">
+            {isCa ? "Afilia't" : 'Afíliate'}
+          </a>
+          <!-- Botó hamburguesa -->
+          <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 p-1" aria-label="Menú">
+            <span class="w-5 h-0.5 bg-[#1a2e4a] transition-all"></span>
+            <span class="w-5 h-0.5 bg-[#1a2e4a] transition-all"></span>
+            <span class="w-5 h-0.5 bg-[#1a2e4a] transition-all"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Menú mòbil -->
+      <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-4">
+          <a href={links.quiSom} class="text-sm text-gray-600 hover:text-gray-900">{isCa ? 'Qui som' : 'Quiénes somos'}</a>
+          <a href={links.noticies} class="text-sm text-gray-600 hover:text-gray-900">{isCa ? 'Notícies' : 'Noticias'}</a>
+          <a href={links.documents} class="text-sm text-gray-600 hover:text-gray-900">{isCa ? 'Documents' : 'Documentos'}</a>
+          <a href={links.contacte} class="text-sm text-gray-600 hover:text-gray-900">{isCa ? 'Contacte' : 'Contacto'}</a>
+          <div class="pt-2 border-t border-gray-100">
+            <a href={links.afiliacio} class="block text-center bg-[#e63946] text-white text-sm px-4 py-2.5 rounded hover:bg-red-700">
+              {isCa ? "Afilia't" : 'Afíliate'}
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <script>
+      const btn = document.getElementById('menu-btn')
+      const menu = document.getElementById('mobile-menu')
+      btn?.addEventListener('click', () => {
+        menu?.classList.toggle('hidden')
+      })
+    </script>
+
+    <!-- Contenido -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-100 mt-16">
+      <div class="max-w-5xl mx-auto px-6 py-10 grid grid-cols-3 gap-8">
+        <div>
+          <p class="text-sm font-medium text-[#1a2e4a] mb-3">ÁBACOS</p>
+          <p class="text-xs text-gray-400 leading-relaxed">{isCa ? "Sindicat de l'Ajuntament de Barcelona i Administracions de Catalunya. Independents i sense ànim de lucre." : "Sindicato del Ayuntamiento de Barcelona y Administraciones de Cataluña. Independientes y sin ánimo de lucro."}</p>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-[#1a2e4a] mb-3">{isCa ? 'Navegació' : 'Navegación'}</p>
+          <div class="flex flex-col gap-2">
+            <a href={links.quiSom} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Qui som' : 'Quiénes somos'}</a>
+            <a href={links.noticies} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Notícies' : 'Noticias'}</a>
+            <a href={links.documents} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Documents' : 'Documentos'}</a>
+            <a href={links.afiliacio} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? "Afilia't" : 'Afíliate'}</a>
+            <a href={links.contacte} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Contacte' : 'Contacto'}</a>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-[#1a2e4a] mb-3">Legal</p>
+          <div class="flex flex-col gap-2">
+            <a href={links.avisLegal} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Avís legal' : 'Aviso legal'}</a>
+            <a href={links.privacitat} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Política de privacitat' : 'Política de privacidad'}</a>
+            <a href={links.cookies} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Política de cookies' : 'Política de cookies'}</a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-100 py-4 px-6 text-center">
+        <p class="text-xs text-gray-400">© 2025 ÁBACOS — {isCa ? 'Tots els drets reservats' : 'Todos los derechos reservados'}</p>
+      </div>
+    </footer>
+
+  </body>
+</html>

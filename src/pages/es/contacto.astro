@@ -1,0 +1,131 @@
+---
+import Layout from '../../layouts/Layout.astro'
+---
+
+<Layout title="Contacto" lang="es" altLangUrl="/ca/contacte" description="Contacta con ÁBACOS, sindicato de trabajadores del Ayuntamiento de Barcelona. Plaza Universitat 3, Barcelona.">
+
+  <section class="max-w-5xl mx-auto px-6 py-16">
+    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">Contacto</p>
+    <h1 class="text-3xl font-medium text-[#1a2e4a] mb-4">Contacta con nosotros</h1>
+    <p class="text-sm text-gray-500 leading-relaxed max-w-2xl mb-12">
+      Estamos aquí para ayudarte. Si tienes cualquier consulta sobre tus derechos laborales, el proceso de afiliación o cualquier otra cuestión, no dudes en contactarnos.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+      <!-- Info -->
+      <div class="flex flex-col gap-8">
+        <div>
+          <h2 class="text-sm font-medium text-[#1a2e4a] mb-4">Dónde encontrarnos</h2>
+          <div class="flex flex-col gap-4">
+
+            <div class="flex gap-4 items-start">
+              <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                <i class="ti ti-map-pin text-[#1a2e4a] text-base"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-[#1a2e4a] mb-0.5">Dirección</p>
+                <p class="text-sm text-gray-500">Plaza Universitat 3, 6ª planta<br/>08007 Barcelona</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4 items-start">
+              <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                <i class="ti ti-phone text-[#1a2e4a] text-base"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-[#1a2e4a] mb-0.5">Teléfono</p>
+                <p class="text-sm text-gray-500">637 290 352</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4 items-start">
+              <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                <i class="ti ti-mail text-[#1a2e4a] text-base"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-[#1a2e4a] mb-0.5">Correo electrónico</p>
+                <p class="text-sm text-gray-500">abacos@abacos.website</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4 items-start">
+              <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                <i class="ti ti-clock text-[#1a2e4a] text-base"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-[#1a2e4a] mb-0.5">Horario de atención</p>
+                <p class="text-sm text-gray-500">Lunes a viernes<br/>9:00 – 14:00 h</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Redes sociales -->
+        <div>
+          <h2 class="text-sm font-medium text-[#1a2e4a] mb-4">Redes sociales</h2>
+          <div class="flex gap-3">
+            <a href="https://www.facebook.com/" target="_blank" title="Facebook" class="group relative w-10 h-10 rounded-lg flex items-center justify-center text-white transition-all hover:opacity-80" style="background:#1877F2">
+              <i class="ti ti-brand-facebook text-lg"></i>
+              <span class="absolute -bottom-7 left-1/2 -translate-x-1/2 text-xs text-white bg-[#1a2e4a] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Facebook</span>
+            </a>
+            <a href="https://www.instagram.com/" target="_blank" title="Instagram" class="group relative w-10 h-10 rounded-lg flex items-center justify-center text-white transition-all hover:opacity-80" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)">
+              <i class="ti ti-brand-instagram text-lg"></i>
+              <span class="absolute -bottom-7 left-1/2 -translate-x-1/2 text-xs text-white bg-[#1a2e4a] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Instagram</span>
+            </a>
+            <a href="https://www.twitter.com/" target="_blank" title="Twitter / X" class="group relative w-10 h-10 rounded-lg flex items-center justify-center text-white transition-all hover:opacity-80" style="background:#000">
+              <i class="ti ti-brand-x text-lg"></i>
+              <span class="absolute -bottom-7 left-1/2 -translate-x-1/2 text-xs text-white bg-[#1a2e4a] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Twitter / X</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div>
+        <h2 class="text-sm font-medium text-[#1a2e4a] mb-4">Envíanos un mensaje</h2>
+        <form class="flex flex-col gap-4" action="#" method="POST">
+
+          <div class="flex flex-col gap-1">
+            <label class="text-xs text-gray-400">Nombre completo *</label>
+            <input type="text" name="nom" required placeholder="Toni García"
+              class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-700 bg-white focus:outline-none focus:border-[#1a2e4a] transition-colors" />
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label class="text-xs text-gray-400">Correo electrónico *</label>
+            <input type="email" name="email" required placeholder="toni@ejemplo.com"
+              class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-700 bg-white focus:outline-none focus:border-[#1a2e4a] transition-colors" />
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label class="text-xs text-gray-400">Teléfono (opcional)</label>
+            <input type="tel" name="telefon" placeholder="600 000 000"
+              class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-700 bg-white focus:outline-none focus:border-[#1a2e4a] transition-colors" />
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label class="text-xs text-gray-400">Mensaje *</label>
+            <textarea name="missatge" rows="5" required placeholder="Escribe tu mensaje aquí..."
+              class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-700 bg-white focus:outline-none focus:border-[#1a2e4a] transition-colors resize-none"></textarea>
+          </div>
+
+          <div class="flex gap-3 items-start p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <input type="checkbox" id="rgpd" name="rgpd" required class="mt-0.5 accent-[#1a2e4a] w-4 h-4 shrink-0" />
+            <label for="rgpd" class="text-xs text-gray-400 leading-relaxed">
+              He leído y acepto la <a href="/es/privacidad" class="text-[#1a2e4a] underline">Política de privacidad</a> y consiento el tratamiento de mis datos para contactar con ÁBACOS. *
+            </label>
+          </div>
+
+          <button type="submit" class="bg-[#1a2e4a] text-white text-sm py-3 rounded-lg hover:bg-[#243d5e] transition-colors font-medium">
+            Enviar mensaje →
+          </button>
+
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+</Layout>

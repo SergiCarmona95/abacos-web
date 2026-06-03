@@ -1,0 +1,74 @@
+---
+import Layout from '../../layouts/Layout.astro'
+---
+
+<Layout title="Qui som" lang="ca" altLangUrl="/es/quienes-somos" description="Coneix l'equip de delegats electes d'ÁBACOS, sindicat de l'Ajuntament de Barcelona." lang="ca">
+
+  <section class="max-w-5xl mx-auto px-6 py-16">
+    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">L'equip</p>
+    <h1 class="text-3xl font-medium text-[#1a2e4a] mb-4">Qui som</h1>
+    <p class="text-sm text-gray-500 leading-relaxed max-w-2xl mb-12">
+      Som delegats electes de la Junta de Personal de l'Ajuntament de Barcelona. Defensem els drets de les treballadores i treballadors de les administracions públiques de Catalunya amb independència i compromís.
+    </p>
+
+    <h2 class="text-sm font-medium text-[#1a2e4a] mb-6">Els delegats</h2>
+    <div class="flex flex-col gap-4 mb-16">
+
+      <div class="card-member">
+        <div class="card-avatar">TA</div>
+        <div>
+          <p class="card-role">Agent GUB · Delegat</p>
+          <p class="card-name">Toni Arjona</p>
+          <p class="card-desc">Llicenciat en Dret i en Ciències del Treball. Més de 33 anys d'experiència a l'administració pública. Membre de la Junta de Personal de l'Ajuntament de Barcelona.</p>
+        </div>
+      </div>
+
+      <div class="card-member">
+        <div class="card-avatar">SF</div>
+        <div>
+          <p class="card-role">Directora escola bressol · Delegada</p>
+          <p class="card-name">Sònia Fernández</p>
+          <p class="card-desc">Llicenciada en Història de l'Art i Diplomada en Magisteri. Més de 18 anys a l'Ajuntament de Barcelona. Membre de la Junta de Personal.</p>
+        </div>
+      </div>
+
+      <div class="card-member">
+        <div class="card-avatar">JT</div>
+        <div>
+          <p class="card-role">Agent GUB · Delegat</p>
+          <p class="card-name">Jesús de la Torre</p>
+          <p class="card-desc">Llicenciat en Dret. Més de 22 anys d'experiència a l'Ajuntament de Barcelona. Membre de la Junta de Personal.</p>
+        </div>
+      </div>
+
+      <div class="card-member">
+        <div class="card-avatar">MG</div>
+        <div>
+          <p class="card-role">Educadora escola bressol · Delegada</p>
+          <p class="card-name">Mireia Gil</p>
+          <p class="card-desc">Tècnica Superior d'Educació Infantil. Més de 12 anys d'experiència a l'Ajuntament de Barcelona. Membre de la Junta de Personal.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <h2 class="text-sm font-medium text-[#1a2e4a] mb-6">Les nostres finalitats</h2>
+    <div class="flex flex-col divide-y divide-gray-100">
+      {[
+        'Representar i defensar les persones treballadores sense distinció de sexe, origen, llengua o ideologia.',
+        "Defensar els interessos generals i específics dels treballadors en l'exercici de la seva activitat professional.",
+        'Representar els afiliats en àmbits administratius, corporatius i judicials.',
+        'Fomentar la negociació col·lectiva i el diàleg social.',
+        'Promoure la solidaritat i la formació de totes les persones treballadores.',
+        'Constituir seccions sindicals a les diferents administracions públiques de Catalunya.',
+      ].map((item) => (
+        <div class="py-4 flex gap-4 items-start">
+          <span class="text-[#e63946] mt-0.5 shrink-0">→</span>
+          <p class="text-sm text-gray-500 leading-relaxed">{item}</p>
+        </div>
+      ))}
+    </div>
+
+  </section>
+
+</Layout>
