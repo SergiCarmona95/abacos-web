@@ -1,0 +1,57 @@
+---
+import Layout from '../../../layouts/Layout.astro'
+import { getCollection, getEntry } from 'astro:content'
+
+export async function getStaticPaths() {
+  const noticies = await getCollection('noticies')
+  return noticies.map((n: any) => ({
+    params: { slug: n.slug },
+    props: { noticia: n }
+  }))
+}
+
+const { noticia } = Astro.props as any
+const { Content } = await noticia.render()
+
+function getYoutubeId(url: string) {
+  if (url.includes('youtu.be')) return url.split('/').pop()
+  try { return new URL(url).searchParams.get('v') } catch { return null }
+}
+---
+
+<Layout title={noticia.data.titol} lang="ca" altLangUrl={`/es/noticias/${noticia.slug}`} description={noticia.data.resum}>
+
+  <section class="max-w-3xl mx-auto px-6 py-16">
+
+    <a href="/ca/noticies" class="text-xs text-[#e63946] hover:underline mb-8 inline-block">← Tornar a notícies</a>
+
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{noticia.data.tag}</span>
+        <span class="text-xs text-gray-400">{noticia.data.data}</span>
+      </div>
+      <h1 class="text-3xl font-medium text-[#1a2e4a] mb-4">{noticia.data.titol}</h1>
+      <p class="text-sm text-gray-500 leading-relaxed">{noticia.data.resum}</p>
+    </div>
+
+    {noticia.data.imatge && (
+      <img src={noticia.data.imatge} alt={noticia.data.titol} class="w-full h-64 object-cover rounded-xl mb-8" />
+    )}
+
+    {noticia.data.video && (
+      <div class="mb-8 aspect-video">
+        <iframe
+          src={`https://www.youtube.com/embed/${getYoutubeId(noticia.data.video)}`}
+          class="w-full h-full rounded-xl"
+          allowfullscreen
+        ></iframe>
+      </div>
+    )}
+
+    <div class="prose prose-sm max-w-none text-gray-500 leading-relaxed">
+      <Content />
+    </div>
+
+  </section>
+
+</Layout>

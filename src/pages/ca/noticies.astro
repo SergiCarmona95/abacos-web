@@ -1,64 +1,52 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import { getCollection } from 'astro:content'
 
-const noticies = [
-  {
-    data: '03 Jun 2025',
-    tag: 'Negociació',
-    titol: "Nova convocatòria de mesa de negociació col·lectiva a l'Ajuntament de Barcelona",
-    resum: "S'ha convocat una nova reunió de la mesa de negociació col·lectiva per tractar les condicions laborals del personal de l'Ajuntament de Barcelona per al proper any.",
-  },
-  {
-    data: '28 Mai 2025',
-    tag: 'Permisos',
-    titol: 'Actualització dels permisos i llicències per a empleats públics 2025',
-    resum: "El Departament de Recursos Humans ha publicat l'actualització dels permisos i llicències aplicables als treballadors de l'administració pública catalana per a l'any 2025.",
-  },
-  {
-    data: '15 Mai 2025',
-    tag: 'Assemblea',
-    titol: "Assemblea d'afiliats ÁBACOS: resum i acords adoptats",
-    resum: "Es va celebrar l'assemblea anual d'afiliats d'ÁBACOS on es van debatre i aprovar els principals acords per a la defensa dels drets laborals dels treballadors públics.",
-  },
-  {
-    data: '02 Mai 2025',
-    tag: 'Drets laborals',
-    titol: 'Guia pràctica sobre el dret a la desconnexió digital',
-    resum: "ÁBACOS publica una guia pràctica per als treballadors públics sobre el dret a la desconnexió digital fora de l'horari laboral.",
-  },
-  {
-    data: '18 Abr 2025',
-    tag: 'Formació',
-    titol: 'Nou curs de formació sindical per a delegats i afiliats',
-    resum: 'ÁBACOS organitza un curs de formació sindical adreçat als delegats i afiliats per reforçar els coneixements en matèria de drets laborals i negociació col·lectiva.',
-  },
-]
+const documents = await getCollection('documents')
+
+const categories = ['Convenis', 'Permisos i llicències', 'Afiliació', 'Altres']
 ---
 
-<Layout title="Notícies" lang="ca" altLangUrl="/es/noticias"  description="Darreres notícies i actualitzacions d'ÁBACOS, sindicat de l'Ajuntament de Barcelona." >
+<Layout title="Documents" lang="ca" altLangUrl="/es/documentos" description="Documents, convenis i formularis per a treballadors públics de l'Ajuntament de Barcelona.">
 
   <section class="max-w-5xl mx-auto px-6 py-16">
-    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">Actualitat</p>
-    <h1 class="text-3xl font-medium text-[#1a2e4a] mb-4">Notícies i blog</h1>
+    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">Recursos</p>
+    <h1 class="text-3xl font-medium text-[#1a2e4a] mb-4">Documents i descàrregues</h1>
     <p class="text-sm text-gray-500 leading-relaxed max-w-2xl mb-12">
-      Informació actualitzada sobre negociació col·lectiva, drets laborals, permisos i tot allò que afecta els treballadors públics de Barcelona i Catalunya.
+      Accedeix als convenis, permisos, llicències i formularis oficials per als treballadors públics de l'Ajuntament de Barcelona i les administracions de Catalunya.
     </p>
 
-    <div class="flex flex-col divide-y divide-gray-100">
-      {noticies.map((n) => (
-        <div class="py-8 flex gap-8">
-          <div class="min-w-[90px]">
-            <p class="text-xs text-gray-400">{n.data}</p>
-          </div>
-          <div class="flex-1">
-            <span class="inline-block text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full mb-3">{n.tag}</span>
-            <h2 class="text-base font-medium text-[#1a2e4a] mb-2">{n.titol}</h2>
-            <p class="text-sm text-gray-500 leading-relaxed mb-4">{n.resum}</p>
-            <a href="#" class="text-xs text-[#e63946] hover:underline">Llegir més →</a>
-          </div>
-        </div>
-      ))}
-    </div>
+    {documents.length === 0 ? (
+      <p class="text-sm text-gray-400">Encara no hi ha documents publicats.</p>
+    ) : (
+      <div class="flex flex-col gap-12">
+        {categories.map((cat) => {
+          const docs = documents.filter((d: any) => d.data.categoria === cat)
+          if (docs.length === 0) return null
+          return (
+            <div>
+              <h2 class="text-sm font-medium text-[#1a2e4a] mb-4 pb-2 border-b border-gray-100">{cat}</h2>
+              <div class="flex flex-col gap-3">
+                {docs.map((doc: any) => (
+                  <a href={doc.data.url} target="_blank" class="flex items-center gap-4 p-5 border border-gray-100 rounded-xl bg-gray-50 hover:border-gray-300 hover:bg-white transition-all group">
+                    <div class="w-10 h-10 rounded-lg bg-[#e63946] flex items-center justify-center shrink-0">
+                      <i class="ti ti-file-type-pdf text-white text-lg"></i>
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-sm font-medium text-[#1a2e4a] mb-0.5">{doc.data.nom}</p>
+                    </div>
+                    <div class="text-right shrink-0">
+                      <p class="text-xs text-gray-400 mb-1">PDF · {doc.data.mida}</p>
+                      <p class="text-xs text-[#e63946] group-hover:underline">Descarregar →</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    )}
 
   </section>
 
