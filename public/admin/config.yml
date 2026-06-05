@@ -20,7 +20,7 @@ collections:
     fields:
       - { label: "Títol (CA)", name: titol, widget: string }
       - { label: "Títol (ES)", name: titolEs, widget: string }
-      - { label: "Data", name: data, widget: date, format: "DD MMM YYYY" }
+      - { label: "Data", name: data, widget: datetime, format: "DD MMM YYYY", date_format: "DD MMM YYYY", time_format: false }
       - { label: "Tag (CA)", name: tag, widget: string }
       - { label: "Tag (ES)", name: tagEs, widget: string }
       - { label: "Resum (CA)", name: resum, widget: text }
@@ -40,4 +40,4 @@ collections:
       - { label: "Categoria (CA)", name: categoria, widget: select, options: ["Convenis", "Permisos i llicències", "Afiliació", "Altres"] }
       - { label: "Categoria (ES)", name: categoriaEs, widget: select, options: ["Convenios", "Permisos y licencias", "Afiliación", "Otros"] }
       - { label: "Mida", name: mida, widget: string, hint: "Ex: 2.4 MB" }
-      - { label: "Fitxer PDF", name: url, widget: file, media_folder: /uploads/documents, allow_multiple: false }
+      - { label: "Fitxer PDF", name: url, widget: file, media_folder: /uploads/documents }
