@@ -5,6 +5,7 @@ backend:
   site_domain: dazzling-fenglisu-175fa2.netlify.app
   base_url: https://api.netlify.com
   auth_endpoint: auth
+  auth_type: pkce
 
 media_folder: public/uploads
 public_folder: /uploads
