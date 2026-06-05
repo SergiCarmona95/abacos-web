@@ -2,6 +2,7 @@ backend:
   name: github
   repo: SergiCarmona95/abacos-web
   branch: main
+  site_domain: dazzling-fenglisu-175fa2.netlify.app
 
 media_folder: public/uploads
 public_folder: /uploads
