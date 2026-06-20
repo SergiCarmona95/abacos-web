@@ -6,7 +6,6 @@
   const isIdentityAction = hash.includes('invite_token') || hash.includes('confirmation_token') || hash.includes('recovery_token')
 
   if (!isIdentityAction) {
-    const lang = navigator.language || ''
-    window.location.replace(lang.startsWith('ca') ? '/ca/' : '/es/')
+    window.location.replace('/ca/')
   }
 </script>
