@@ -1,9 +1,9 @@
 ---
 ---
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-  const hash = window.location.hash
-  const isIdentityAction = hash.includes('invite_token') || hash.includes('confirmation_token') || hash.includes('recovery_token')
+<script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script is:inline>
+  var hash = window.location.hash
+  var isIdentityAction = hash.indexOf('invite_token') !== -1 || hash.indexOf('confirmation_token') !== -1 || hash.indexOf('recovery_token') !== -1
 
   if (!isIdentityAction) {
     window.location.replace('/ca/')
