@@ -5,7 +5,7 @@ Proyecto web del sindicato **ÁBACOS** del Ayuntamiento de Barcelona.
 ## Stack técnico
 
 - **Astro v6** + **Tailwind CSS v4** (plugin `@tailwindcss/vite`)
-- **Sveltia CMS** — panel en `public/admin/` (index.html + config.yml)
+- **Decap CMS** — panel en `public/admin/` (index.html + config.yml)
 - **Content Collections** — noticias y documentos en `src/content/`
 - Node.js >= 22
 
@@ -30,24 +30,24 @@ Proyecto web del sindicato **ÁBACOS** del Ayuntamiento de Barcelona.
 - **Site Netlify (OAuth)**: `dazzling-fenglisu-175fa2.netlify.app`
 - **Dominio final**: `www.abacos.website`
 
-## CMS (Sveltia CMS)
+## CMS (Decap CMS)
 
-Autenticación OAuth de GitHub gestionada por Netlify Identity.
+Autenticación por **Netlify Identity** (email + contraseña). No requiere cuenta de GitHub para los editores.
 
 `public/admin/config.yml`:
 ```yaml
 backend:
-  name: github
-  repo: SergiCarmona95/abacos-web
+  name: git-gateway
   branch: main
-  site_domain: dazzling-fenglisu-175fa2.netlify.app
-  base_url: https://api.netlify.com
-  auth_endpoint: auth
 ```
 
-**Requisito**: En el dashboard de Netlify del site `dazzling-fenglisu-175fa2`, ir a
-**Site configuration → Access & security → OAuth** y añadir GitHub como provider
-con las credenciales de la GitHub OAuth App.
+**Para invitar editores**: Netlify → site `dazzling-fenglisu-175fa2` → **Identity** → **Invite users** → email.
+
+**Requisitos activos en Netlify**:
+- Identity: activado, registro en "Invite only"
+- Git Gateway: activado
+
+**Nota**: Sveltia CMS fue descartado porque no soporta `git-gateway`. Se usa Decap CMS.
 
 ### Collections del CMS
 
