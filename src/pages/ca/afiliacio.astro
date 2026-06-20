@@ -1,5 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+
+const docs = await getCollection('documents')
+const formulari = docs.find(d => d.data.categoria === 'Afiliació')
 ---
 
 <Layout title="Afilia't" altLangUrl="/es/afiliacion"  lang="ca" description="Afilia't a ÁBACOS, sindicat de treballadors de l'Ajuntament de Barcelona i administracions de Catalunya." >
@@ -66,10 +70,10 @@ import Layout from '../../layouts/Layout.astro'
         <div>
           <h3 class="text-sm font-medium text-[#1a2e4a] mb-1">Descarrega el formulari</h3>
           <p class="text-xs text-gray-500 leading-relaxed mb-3">Descarrega el formulari oficial d'afiliació a ÁBACOS en format PDF.</p>
-          <a href="/documents/formulari-afiliacio.pdf" target="_blank" class="inline-flex items-center gap-2 text-xs text-[#e63946] border border-[#e63946] rounded-lg px-3 py-1.5 hover:bg-[#e63946] hover:text-white transition-all">
+          {formulari && <a href={formulari.data.url} target="_blank" class="inline-flex items-center gap-2 text-xs text-[#e63946] border border-[#e63946] rounded-lg px-3 py-1.5 hover:bg-[#e63946] hover:text-white transition-all">
             <i class="ti ti-download"></i>
             Descarregar formulari
-          </a>
+          </a>}
         </div>
       </div>
 

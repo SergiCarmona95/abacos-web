@@ -1,5 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+
+const docs = await getCollection('documents')
+const formulario = docs.find(d => d.data.categoriaEs === 'Afiliación')
 ---
 
 <Layout title="Afíliate" lang="es" altLangUrl="/ca/afiliacio" description="Afíliate a ÁBACOS, sindicato de trabajadores del Ayuntamiento de Barcelona y administraciones de Cataluña.">
@@ -67,10 +71,10 @@ import Layout from '../../layouts/Layout.astro'
         <div>
           <h3 class="text-sm font-medium text-[#1a2e4a] mb-1">Descarga el formulario</h3>
           <p class="text-xs text-gray-500 leading-relaxed mb-3">Descarga el formulario oficial de afiliación a ÁBACOS en formato PDF.</p>
-          <a href="/documents/formulari-afiliacio.pdf" target="_blank" class="inline-flex items-center gap-2 text-xs text-[#e63946] border border-[#e63946] rounded-lg px-3 py-1.5 hover:bg-[#e63946] hover:text-white transition-all">
+          {formulario && <a href={formulario.data.url} target="_blank" class="inline-flex items-center gap-2 text-xs text-[#e63946] border border-[#e63946] rounded-lg px-3 py-1.5 hover:bg-[#e63946] hover:text-white transition-all">
             <i class="ti ti-download"></i>
             Descargar formulario
-          </a>
+          </a>}
         </div>
       </div>
 
