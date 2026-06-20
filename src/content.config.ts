@@ -19,6 +19,7 @@ const noticies = defineCollection({
 const documents = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/documents' }),
   schema: z.object({
+    identificador: z.string(),
     nom: z.string(),
     nomEs: z.string(),
     categoria: z.string(),

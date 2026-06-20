@@ -1,10 +1,6 @@
 backend:
-  name: github
-  repo: SergiCarmona95/abacos-web
+  name: git-gateway
   branch: main
-  site_domain: dazzling-fenglisu-175fa2.netlify.app
-  base_url: https://api.netlify.com
-  auth_endpoint: auth
 
 media_folder: public/uploads
 public_folder: /uploads
@@ -33,9 +29,10 @@ collections:
     label: Documents
     folder: src/content/documents
     create: true
-    identifier_field: nom
-    slug: "{{nom}}"
+    identifier_field: identificador
+    slug: "{{identificador}}"
     fields:
+      - { label: "Identificador (slug)", name: identificador, widget: string, hint: "Identificador únic sense espais ni accents. Ex: acord-condicions-2024" }
       - { label: "Nom (CA)", name: nom, widget: string }
       - { label: "Nom (ES)", name: nomEs, widget: string }
       - { label: "Categoria (CA)", name: categoria, widget: select, options: ["Convenis", "Permisos i llicències", "Afiliació", "Altres"] }
