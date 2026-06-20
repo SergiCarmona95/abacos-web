@@ -1,4 +1,6 @@
-const lang = Astro.request.headers.get('accept-language') || ''
-const prefersCatala = lang.startsWith('ca') || lang.includes('ca-ES')
-const redirect = prefersCatala ? '/ca/' : '/es/'
-return Astro.redirect(redirect)
+---
+---
+<script>
+  const lang = navigator.language || ''
+  window.location.replace(lang.startsWith('ca') ? '/ca/' : '/es/')
+</script>
