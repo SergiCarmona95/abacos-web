@@ -1,6 +1,12 @@
 ---
 ---
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
-  const lang = navigator.language || ''
-  window.location.replace(lang.startsWith('ca') ? '/ca/' : '/es/')
+  const hash = window.location.hash
+  const isIdentityAction = hash.includes('invite_token') || hash.includes('confirmation_token') || hash.includes('recovery_token')
+
+  if (!isIdentityAction) {
+    const lang = navigator.language || ''
+    window.location.replace(lang.startsWith('ca') ? '/ca/' : '/es/')
+  }
 </script>
