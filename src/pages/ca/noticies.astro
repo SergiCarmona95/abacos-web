@@ -2,49 +2,34 @@
 import Layout from '../../layouts/Layout.astro'
 import { getCollection } from 'astro:content'
 
-const documents = await getCollection('documents')
-
-const categories = ['Convenis', 'Permisos i llicències', 'Afiliació', 'Altres']
+const noticies = await getCollection('noticies')
+noticies.sort((a, b) => new Date(b.data.data).getTime() - new Date(a.data.data).getTime())
 ---
 
-<Layout title="Documents" lang="ca" altLangUrl="/es/documentos" description="Documents, convenis i formularis per a treballadors públics de l'Ajuntament de Barcelona.">
+<Layout title="Notícies" lang="ca" altLangUrl="/es/noticias" description="Notícies i actualitat del sindicat ÁBACOS de l'Ajuntament de Barcelona.">
 
   <section class="max-w-5xl mx-auto px-6 py-16">
-    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">Recursos</p>
-    <h1 class="text-3xl font-medium text-[#1a2e4a] mb-4">Documents i descàrregues</h1>
+    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">Actualitat</p>
+    <h1 class="text-3xl font-medium text-[#1a2e4a] mb-4">Notícies</h1>
     <p class="text-sm text-gray-500 leading-relaxed max-w-2xl mb-12">
-      Accedeix als convenis, permisos, llicències i formularis oficials per als treballadors públics de l'Ajuntament de Barcelona i les administracions de Catalunya.
+      Informació i novetats del sindicat ÁBACOS i de l'àmbit laboral dels treballadors públics de Barcelona.
     </p>
 
-    {documents.length === 0 ? (
-      <p class="text-sm text-gray-400">Encara no hi ha documents publicats.</p>
+    {noticies.length === 0 ? (
+      <p class="text-sm text-gray-400">Encara no hi ha notícies publicades.</p>
     ) : (
-      <div class="flex flex-col gap-12">
-        {categories.map((cat) => {
-          const docs = documents.filter((d: any) => d.data.categoria === cat)
-          if (docs.length === 0) return null
-          return (
-            <div>
-              <h2 class="text-sm font-medium text-[#1a2e4a] mb-4 pb-2 border-b border-gray-100">{cat}</h2>
-              <div class="flex flex-col gap-3">
-                {docs.map((doc: any) => (
-                  <a href={doc.data.url} target="_blank" class="flex items-center gap-4 p-5 border border-gray-100 rounded-xl bg-gray-50 hover:border-gray-300 hover:bg-white transition-all group">
-                    <div class="w-10 h-10 rounded-lg bg-[#e63946] flex items-center justify-center shrink-0">
-                      <i class="ti ti-file-type-pdf text-white text-lg"></i>
-                    </div>
-                    <div class="flex-1">
-                      <p class="text-sm font-medium text-[#1a2e4a] mb-0.5">{doc.data.nom}</p>
-                    </div>
-                    <div class="text-right shrink-0">
-                      <p class="text-xs text-gray-400 mb-1">PDF · {doc.data.mida}</p>
-                      <p class="text-xs text-[#e63946] group-hover:underline">Descarregar →</p>
-                    </div>
-                  </a>
-                ))}
-              </div>
+      <div class="flex flex-col gap-6">
+        {noticies.map((noticia) => (
+          <article class="border border-gray-100 rounded-xl p-6 bg-gray-50 hover:border-gray-300 hover:bg-white transition-all">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-xs text-[#e63946] font-medium">{noticia.data.tag}</span>
+              <span class="text-gray-200">·</span>
+              <span class="text-xs text-gray-400">{noticia.data.data}</span>
             </div>
-          )
-        })}
+            <h2 class="text-base font-medium text-[#1a2e4a] mb-2">{noticia.data.titol}</h2>
+            <p class="text-sm text-gray-500 leading-relaxed">{noticia.data.resum}</p>
+          </article>
+        ))}
       </div>
     )}
 
