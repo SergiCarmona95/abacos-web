@@ -27,17 +27,18 @@ collections:
       - { label: "Resum (ES)", name: resumEs, widget: text }
       - { label: "Contingut (CA)", name: body, widget: markdown }
       - { label: "Vídeo YouTube (opcional)", name: video, widget: string, required: false, hint: "Enganxa l'enllaç del vídeo de YouTube" }
-      - { label: "Imatge", name: imatge, widget: image, required: false, media_folder: /uploads/noticies }
+      - { label: "Imatge", name: imatge, widget: image, required: false, media_folder: /public/uploads/noticies, public_folder: /uploads/noticies }
 
   - name: documents
     label: Documents
     folder: src/content/documents
     create: true
-    slug: "{{slug}}"
+    identifier_field: nom
+    slug: "{{nom}}"
     fields:
       - { label: "Nom (CA)", name: nom, widget: string }
       - { label: "Nom (ES)", name: nomEs, widget: string }
       - { label: "Categoria (CA)", name: categoria, widget: select, options: ["Convenis", "Permisos i llicències", "Afiliació", "Altres"] }
       - { label: "Categoria (ES)", name: categoriaEs, widget: select, options: ["Convenios", "Permisos y licencias", "Afiliación", "Otros"] }
       - { label: "Mida", name: mida, widget: string, hint: "Ex: 2.4 MB" }
-      - { label: "Fitxer PDF", name: url, widget: file, media_folder: /uploads/documents }
+      - { label: "Fitxer PDF", name: url, widget: file, media_folder: /public/uploads/documents, public_folder: /uploads/documents }

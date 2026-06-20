@@ -88,5 +88,7 @@ npm run preview  # preview del build
 
 ## Historial de decisiones importantes
 
-- **Migración Vercel → Netlify**: el popup OAuth de Netlify devolvía "Authorized" pero el token no se pasaba a Sveltia CMS porque el callback no llegaba al dominio correcto. La solución es desplegar en Netlify y configurar el OAuth provider desde el dashboard de Netlify.
+- **Arquitectura dual Vercel + Netlify**: la web se sirve desde Vercel, pero el site de Netlify (`dazzling-fenglisu-175fa2`) actúa solo como gateway OAuth. No necesita tener el proyecto desplegado — solo necesita existir y tener el GitHub OAuth provider configurado.
 - **`site_domain`**: debe ser el dominio del site de Netlify que tiene configurado el OAuth provider, no el dominio final de producción.
+- **GitHub OAuth App**: callback URL debe ser `https://api.netlify.com/auth/done`. Las credenciales van en el dashboard de Netlify del site `dazzling-fenglisu-175fa2` → Site configuration → Access & security → OAuth.
+- **CMS verificado funcionando** en `dazzling-fenglisu-175fa2.netlify.app/admin/` con colecciones Notícies y Documents accesibles.
