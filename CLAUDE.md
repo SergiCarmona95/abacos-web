@@ -11,24 +11,24 @@ Proyecto web del sindicato **ÁBACOS** del Ayuntamiento de Barcelona.
 
 ## Bilingüismo
 
-- `/ca/` — catalán (idioma principal, ruta por defecto)
+- `/ca/` — catalán (idioma principal, ruta por defecto siempre)
 - `/es/` — castellano
-- La raíz `/` redirige a `/ca/` (configurado en `netlify.toml` y antes en `vercel.json`)
+- La raíz `/` redirige a `/ca/` via JS en `src/pages/index.astro` (no hay redirect en `netlify.toml` — lo gestiona el JS para no interferir con los tokens de Netlify Identity)
 
 ## Estructura de páginas
 
 ```
 /ca/  → inicio, qui-som, noticies, documents, afiliacio, contacte, avis-legal, privacitat, cookies
 /es/  → inicio, quienes-somos, noticias, documentos, afiliacion, contacto, aviso-legal, privacidad, cookies
-/admin/ → panel Sveltia CMS
+/admin/ → panel Decap CMS
 ```
 
 ## Repositorio y despliegue
 
 - **Repo GitHub**: `SergiCarmona95/abacos-web` (privado)
-- **Despliegue**: Netlify (migrado desde Vercel)
-- **Site Netlify (OAuth)**: `dazzling-fenglisu-175fa2.netlify.app`
+- **Despliegue**: Netlify — `dazzling-fenglisu-175fa2.netlify.app`
 - **Dominio final**: `www.abacos.website`
+- **Git remoto local**: configurado con `credential.useHttpPath true` y usuario `SergiCarmona95`
 
 ## CMS (Decap CMS)
 
@@ -61,22 +61,37 @@ backend:
 - `imatge` (image, opcional — `/uploads/noticies/`)
 
 **documents** (`src/content/documents/`):
+- `identificador` (string — slug del fichero, ej: `acord-condicions-2024`)
 - `nom` (string, CA), `nomEs` (string, ES)
 - `categoria` (select CA: Convenis / Permisos i llicències / Afiliació / Altres)
 - `categoriaEs` (select ES: Convenios / Permisos y licencias / Afiliación / Otros)
 - `mida` (string, ej. "2.4 MB")
 - `url` (file — `/uploads/documents/`)
 
+## Páginas conectadas al CMS
+
+Todas usan `getCollection()` — los cambios en el CMS se reflejan automáticamente tras el rebuild:
+
+| Página | Collection | Campos usados |
+|---|---|---|
+| `ca/noticies.astro` | `noticies` | titol, tag, data, resum |
+| `es/noticias.astro` | `noticies` | titolEs, tagEs, data, resumEs |
+| `ca/documents.astro` | `documents` | nom, categoria, mida, url |
+| `es/documentos.astro` | `documents` | nomEs, categoriaEs, mida, url |
+| `ca/afiliacio.astro` | `documents` | url (primer doc categoria=Afiliació) |
+| `es/afiliacion.astro` | `documents` | url (primer doc categoriaEs=Afiliación) |
+
 ## Archivos clave
 
 | Archivo | Propósito |
 |---|---|
 | `astro.config.mjs` | Configuración Astro (site, sitemap, Tailwind) |
-| `netlify.toml` | Build, publish dir, redirect `/` → `/ca/`, headers |
-| `public/admin/config.yml` | Config Sveltia CMS + OAuth GitHub/Netlify |
-| `public/admin/index.html` | Shell del panel CMS |
+| `netlify.toml` | Build command, publish dir, headers admin |
+| `public/admin/config.yml` | Config Decap CMS + git-gateway |
+| `public/admin/index.html` | Shell del panel CMS (carga identity widget + decap) |
+| `src/pages/index.astro` | Redirect JS a /ca/ (preserva tokens Identity) |
 | `src/content.config.ts` | Esquemas de Content Collections |
-| `vercel.json` | Redirect legacy (ya no se usa, puede eliminarse) |
+| `src/layouts/Layout.astro` | Layout principal (incluye netlify-identity-widget) |
 
 ## Comandos habituales
 
@@ -88,7 +103,10 @@ npm run preview  # preview del build
 
 ## Historial de decisiones importantes
 
-- **Arquitectura dual Vercel + Netlify**: la web se sirve desde Vercel, pero el site de Netlify (`dazzling-fenglisu-175fa2`) actúa solo como gateway OAuth. No necesita tener el proyecto desplegado — solo necesita existir y tener el GitHub OAuth provider configurado.
-- **`site_domain`**: debe ser el dominio del site de Netlify que tiene configurado el OAuth provider, no el dominio final de producción.
-- **GitHub OAuth App**: callback URL debe ser `https://api.netlify.com/auth/done`. Las credenciales van en el dashboard de Netlify del site `dazzling-fenglisu-175fa2` → Site configuration → Access & security → OAuth.
-- **CMS verificado funcionando** en `dazzling-fenglisu-175fa2.netlify.app/admin/` con colecciones Notícies y Documents accesibles.
+- **Netlify como hosting completo**: migrado desde arquitectura dual Vercel+Netlify. Netlify gestiona hosting, Identity y Git Gateway en un solo site.
+- **Decap CMS en vez de Sveltia**: Sveltia CMS no soporta el backend `git-gateway` necesario para Netlify Identity.
+- **Netlify Identity en vez de GitHub OAuth**: los editores no tienen cuentas de GitHub. Con Identity reciben un email de invitación y crean contraseña propia.
+- **Redirect raíz sin netlify.toml**: el 302 servidor interfería con los `#invite_token` de Identity (el hash no se envía al servidor y se pierde). El JS de `index.astro` detecta el token y no redirige si está presente.
+- **`is:inline` en scripts de index.astro**: necesario para que Astro no procese los scripts externos como módulos ES (evita error CORS).
+- **Campo `identificador` en documents**: slug explícito para que el CMS genere nombres de fichero legibles en vez de hashes aleatorios.
+- **CMS verificado funcionando** en `dazzling-fenglisu-175fa2.netlify.app/admin/` con login Netlify Identity y colecciones Notícies y Documents.
