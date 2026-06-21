@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../layouts/Layout.astro'
 import { getCollection, render } from 'astro:content'
+import VideoEmbed from '../../../components/VideoEmbed.astro'
 
 export async function getStaticPaths() {
   const noticies = await getCollection('noticies')
@@ -34,13 +35,9 @@ const { Content } = await render(noticia)
       <img src={noticia.data.imatge} alt={noticia.data.titol} class="w-full rounded-xl mb-8 object-cover max-h-80" />
     )}
 
-    {noticia.data.video && (
-      <div class="mb-8 aspect-video">
-        <iframe
-          src={noticia.data.video.replace('watch?v=', 'embed/')}
-          class="w-full h-full rounded-xl"
-          allowfullscreen
-        />
+    {noticia.data.videoUrl && noticia.data.mostrarVideo !== false && (
+      <div class="mb-8">
+        <VideoEmbed url={noticia.data.videoUrl} />
       </div>
     )}
 

@@ -2,6 +2,12 @@ backend:
   name: git-gateway
   branch: main
 
+media_library:
+  name: cloudinary
+  config:
+    cloud_name: djjzvuuzh
+    api_key: 998266795964365
+
 media_folder: public/uploads
 public_folder: /uploads
 
@@ -25,8 +31,24 @@ collections:
       - { label: "Resum (ES)", name: resumEs, widget: text }
       - { label: "Contingut (CA)", name: body, widget: markdown }
       - { label: "Contingut (ES)", name: bodyEs, widget: markdown, required: false }
-      - { label: "Vídeo YouTube (opcional)", name: video, widget: string, required: false, hint: "Enganxa l'enllaç del vídeo de YouTube" }
-      - { label: "Imatge", name: imatge, widget: image, required: false, media_folder: /public/uploads/noticies, public_folder: /uploads/noticies }
+      - { label: "URL del vídeo", name: videoUrl, widget: string, required: false, hint: "Enganxa una URL de YouTube, Instagram o Cloudinary" }
+      - { label: "Mostrar vídeo", name: mostrarVideo, widget: boolean, default: true, required: false }
+      - { label: "Imatge", name: imatge, widget: image, required: false }
+
+  - name: videos
+    label: Vídeos
+    folder: src/content/videos
+    create: true
+    identifier_field: identificador
+    slug: "{{identificador}}"
+    fields:
+      - { label: "Identificador (slug)", name: identificador, widget: string, hint: "Ex: assemblea-juny-2025" }
+      - { label: "Títol (CA)", name: titol, widget: string }
+      - { label: "Títol (ES)", name: titolEs, widget: string }
+      - { label: "Fitxer de vídeo", name: url, widget: file, media_library: { name: cloudinary, config: { cloud_name: djjzvuuzh, api_key: 998266795964365 } } }
+      - { label: "Descripció (CA)", name: descripcio, widget: text, required: false }
+      - { label: "Descripció (ES)", name: descripcioEs, widget: text, required: false }
+      - { label: "Mostrar a la web", name: mostrar, widget: boolean, default: true }
 
   - name: documents
     label: Documents

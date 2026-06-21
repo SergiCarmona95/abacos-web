@@ -1,0 +1,44 @@
+---
+interface Props {
+  url: string
+}
+
+const { url } = Astro.props
+
+function getYouTubeId(url: string) {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
+  return match ? match[1] : null
+}
+
+function getInstagramId(url: string) {
+  const match = url.match(/instagram\.com\/(?:p|reel)\/([^\/\?]+)/)
+  return match ? match[1] : null
+}
+
+const youtubeId = getYouTubeId(url)
+const instagramId = getInstagramId(url)
+const isCloudinary = url.includes('cloudinary.com') || url.includes('res.cloudinary')
+---
+
+{youtubeId && (
+  <div class="aspect-video w-full">
+    <iframe
+      src={`https://www.youtube.com/embed/${youtubeId}`}
+      class="w-full h-full rounded-xl"
+      allowfullscreen
+    />
+  </div>
+)}
+
+{instagramId && (
+  <blockquote
+    class="instagram-media w-full"
+    data-instgrm-permalink={`https://www.instagram.com/p/${instagramId}/`}
+    data-instgrm-version="14"
+  />
+  <script is:inline async src="//www.instagram.com/embed.js" />
+)}
+
+{(isCloudinary || (!youtubeId && !instagramId)) && (
+  <video src={url} controls class="w-full rounded-xl max-h-96" />
+)}

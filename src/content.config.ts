@@ -13,8 +13,22 @@ const noticies = defineCollection({
     resum: z.string(),
     resumEs: z.string(),
     bodyEs: z.string().optional(),
-    video: z.string().optional(),
+    videoUrl: z.string().optional(),
+    mostrarVideo: z.boolean().optional(),
     imatge: z.string().optional(),
+  })
+})
+
+const videos = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/videos' }),
+  schema: z.object({
+    identificador: z.string(),
+    titol: z.string(),
+    titolEs: z.string(),
+    url: z.string(),
+    descripcio: z.string().optional(),
+    descripcioEs: z.string().optional(),
+    mostrar: z.boolean(),
   })
 })
 
@@ -31,4 +45,4 @@ const documents = defineCollection({
   })
 })
 
-export const collections = { noticies, documents }
+export const collections = { noticies, videos, documents }
