@@ -61,14 +61,30 @@ const { videos, lang = 'ca' } = Astro.props
     slides[0].classList.add('vc-active')
 
     function pauseSlide(slide: Element) {
-      slide.querySelectorAll('iframe').forEach((iframe: Element) => {
-        try {
-          (iframe as HTMLIFrameElement).contentWindow?.postMessage(
-            JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), '*'
-          )
-        } catch (e) {}
+      slide.querySelectorAll('iframe').forEach((el: Element) => {
+        const iframe = el as HTMLIFrameElement
+        if (iframe.src.includes('youtube.com/embed')) {
+          try {
+            iframe.contentWindow?.postMessage(
+              JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), '*'
+            )
+          } catch (e) {}
+        } else {
+          // Instagram i altres iframes: guardar src i buidar per aturar
+          iframe.dataset.savedSrc = iframe.src
+          iframe.src = ''
+        }
       })
-      slide.querySelectorAll('video').forEach((v: Element) => (v as HTMLVideoElement).pause())
+      slide.querySelectorAll('video').forEach((el: Element) => (el as HTMLVideoElement).pause())
+    }
+
+    function restoreSlide(slide: Element) {
+      slide.querySelectorAll('iframe').forEach((el: Element) => {
+        const iframe = el as HTMLIFrameElement
+        if (!iframe.src && iframe.dataset.savedSrc) {
+          iframe.src = iframe.dataset.savedSrc
+        }
+      })
     }
 
     function goTo(index: number) {
@@ -76,6 +92,7 @@ const { videos, lang = 'ca' } = Astro.props
       slides[current].classList.remove('vc-active')
       current = ((index % slides.length) + slides.length) % slides.length
       slides[current].classList.add('vc-active')
+      restoreSlide(slides[current])
       if (counter) counter.textContent = `${current + 1} / ${slides.length}`
     }
 
