@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../layouts/Layout.astro'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
+import { marked } from 'marked'
 
 export async function getStaticPaths() {
   const noticies = await getCollection('noticies')
@@ -11,7 +12,9 @@ export async function getStaticPaths() {
 }
 
 const { noticia } = Astro.props
-const { Content } = await noticia.render()
+const { Content } = await render(noticia)
+
+const bodyEsHtml = noticia.data.bodyEs ? await marked(noticia.data.bodyEs) : null
 ---
 
 <Layout title={noticia.data.titolEs} lang="es" altLangUrl={`/ca/noticies/${noticia.data.identificador}`} description={noticia.data.resumEs}>
@@ -45,7 +48,10 @@ const { Content } = await noticia.render()
     )}
 
     <div class="prose prose-sm max-w-none text-gray-600 leading-relaxed">
-      <Content />
+      {bodyEsHtml
+        ? <Fragment set:html={bodyEsHtml} />
+        : <Content />
+      }
     </div>
 
   </article>

@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 
 export async function getStaticPaths() {
   const noticies = await getCollection('noticies')
@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 }
 
 const { noticia } = Astro.props
-const { Content } = await noticia.render()
+const { Content } = await render(noticia)
 ---
 
 <Layout title={noticia.data.titol} lang="ca" altLangUrl={`/es/noticias/${noticia.data.identificador}`} description={noticia.data.resum}>

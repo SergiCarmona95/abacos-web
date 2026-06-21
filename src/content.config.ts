@@ -12,6 +12,7 @@ const noticies = defineCollection({
     tagEs: z.string(),
     resum: z.string(),
     resumEs: z.string(),
+    bodyEs: z.string().optional(),
     video: z.string().optional(),
     imatge: z.string().optional(),
   })
