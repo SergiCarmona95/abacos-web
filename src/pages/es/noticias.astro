@@ -20,15 +20,15 @@ noticies.sort((a, b) => new Date(b.data.data).getTime() - new Date(a.data.data).
     ) : (
       <div class="flex flex-col gap-6">
         {noticies.map((noticia) => (
-          <article class="border border-gray-100 rounded-xl p-6 bg-gray-50 hover:border-gray-300 hover:bg-white transition-all">
+          <a href={`/es/noticias/${noticia.data.identificador}`} class="block border border-gray-100 rounded-xl p-6 bg-gray-50 hover:border-gray-300 hover:bg-white transition-all group">
             <div class="flex items-center gap-2 mb-3">
               <span class="text-xs text-[#e63946] font-medium">{noticia.data.tagEs}</span>
               <span class="text-gray-200">·</span>
               <span class="text-xs text-gray-400">{noticia.data.data}</span>
             </div>
-            <h2 class="text-base font-medium text-[#1a2e4a] mb-2">{noticia.data.titolEs}</h2>
+            <h2 class="text-base font-medium text-[#1a2e4a] mb-2 group-hover:text-[#e63946] transition-colors">{noticia.data.titolEs}</h2>
             <p class="text-sm text-gray-500 leading-relaxed">{noticia.data.resumEs}</p>
-          </article>
+          </a>
         ))}
       </div>
     )}

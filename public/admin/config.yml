@@ -12,8 +12,10 @@ collections:
     label: Notícies
     folder: src/content/noticies
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: identificador
+    slug: "{{identificador}}"
     fields:
+      - { label: "Identificador (slug)", name: identificador, widget: string, hint: "Identificador únic sense espais ni accents. Ex: acord-jornada-2025" }
       - { label: "Títol (CA)", name: titol, widget: string }
       - { label: "Títol (ES)", name: titolEs, widget: string }
       - { label: "Data", name: data, widget: datetime, format: "DD MMM YYYY", date_format: "DD MMM YYYY", time_format: false }
