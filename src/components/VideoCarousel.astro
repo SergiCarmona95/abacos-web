@@ -9,35 +9,40 @@ interface Props {
 const { videos, lang = 'ca' } = Astro.props
 ---
 
-<div class="vc-carousel">
-  {videos.map((v, i) => (
-    <div class="vc-slide" data-index={i}>
-      <VideoEmbed url={v.data.url} />
-      <div class="mt-3">
-        <p class="text-sm font-medium text-[#1a2e4a]">
-          {lang === 'es' ? v.data.titolEs : v.data.titol}
-        </p>
-        {lang === 'es'
-          ? v.data.descripcioEs && <p class="text-xs text-gray-400 mt-1">{v.data.descripcioEs}</p>
-          : v.data.descripcio && <p class="text-xs text-gray-400 mt-1">{v.data.descripcio}</p>
-        }
-      </div>
-    </div>
-  ))}
+<div class="vc-carousel flex items-center gap-3">
 
   {videos.length > 1 && (
-    <div class="flex items-center justify-between mt-5">
-      <button class="vc-prev flex items-center gap-2 text-xs border border-gray-200 text-[#1a2e4a] px-4 py-2 rounded-lg hover:border-[#1a2e4a] transition-colors">
-        <i class="ti ti-arrow-left"></i>
-        {lang === 'es' ? 'Anterior' : 'Anterior'}
-      </button>
-      <span class="vc-counter text-xs text-gray-400">1 / {videos.length}</span>
-      <button class="vc-next flex items-center gap-2 text-xs border border-gray-200 text-[#1a2e4a] px-4 py-2 rounded-lg hover:border-[#1a2e4a] transition-colors">
-        {lang === 'es' ? 'Siguiente' : 'Següent'}
-        <i class="ti ti-arrow-right"></i>
-      </button>
-    </div>
+    <button class="vc-prev flex-shrink-0 w-10 h-10 rounded-full border border-gray-200 text-gray-400 hover:border-[#1a2e4a] hover:text-[#1a2e4a] transition-colors flex items-center justify-center">
+      <i class="ti ti-arrow-left text-sm"></i>
+    </button>
   )}
+
+  <div class="flex-1 min-w-0">
+    {videos.map((v, i) => (
+      <div class="vc-slide" data-index={i}>
+        <VideoEmbed url={v.data.url} />
+        <div class="mt-3">
+          <p class="text-sm font-medium text-[#1a2e4a]">
+            {lang === 'es' ? v.data.titolEs : v.data.titol}
+          </p>
+          {lang === 'es'
+            ? v.data.descripcioEs && <p class="text-xs text-gray-400 mt-1">{v.data.descripcioEs}</p>
+            : v.data.descripcio && <p class="text-xs text-gray-400 mt-1">{v.data.descripcio}</p>
+          }
+        </div>
+      </div>
+    ))}
+    {videos.length > 1 && (
+      <p class="vc-counter text-xs text-gray-400 text-center mt-3">1 / {videos.length}</p>
+    )}
+  </div>
+
+  {videos.length > 1 && (
+    <button class="vc-next flex-shrink-0 w-10 h-10 rounded-full border border-gray-200 text-gray-400 hover:border-[#1a2e4a] hover:text-[#1a2e4a] transition-colors flex items-center justify-center">
+      <i class="ti ti-arrow-right text-sm"></i>
+    </button>
+  )}
+
 </div>
 
 <style>
@@ -70,7 +75,6 @@ const { videos, lang = 'ca' } = Astro.props
             )
           } catch (e) {}
         } else {
-          // Instagram i altres iframes: guardar src i buidar per aturar
           iframe.dataset.savedSrc = iframe.src
           iframe.src = ''
         }
