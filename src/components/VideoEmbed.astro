@@ -23,7 +23,7 @@ const isCloudinary = url.includes('cloudinary.com') || url.includes('res.cloudin
 {youtubeId && (
   <div class="aspect-video w-full">
     <iframe
-      src={`https://www.youtube.com/embed/${youtubeId}`}
+      src={`https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`}
       class="w-full h-full rounded-xl"
       allowfullscreen
     />

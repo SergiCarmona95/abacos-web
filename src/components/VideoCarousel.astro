@@ -60,7 +60,19 @@ const { videos, lang = 'ca' } = Astro.props
     if (slides.length === 0) return
     slides[0].classList.add('vc-active')
 
-    function goTo(index) {
+    function pauseSlide(slide: Element) {
+      slide.querySelectorAll('iframe').forEach((iframe: Element) => {
+        try {
+          (iframe as HTMLIFrameElement).contentWindow?.postMessage(
+            JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), '*'
+          )
+        } catch (e) {}
+      })
+      slide.querySelectorAll('video').forEach((v: Element) => (v as HTMLVideoElement).pause())
+    }
+
+    function goTo(index: number) {
+      pauseSlide(slides[current])
       slides[current].classList.remove('vc-active')
       current = ((index % slides.length) + slides.length) % slides.length
       slides[current].classList.add('vc-active')
