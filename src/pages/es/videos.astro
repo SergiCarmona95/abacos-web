@@ -1,0 +1,37 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+import VideoEmbed from '../../components/VideoEmbed.astro'
+
+const videos = await getCollection('videos')
+const videosVisibles = videos.filter(v => v.data.mostrar)
+---
+
+<Layout title="Vídeos" lang="es" altLangUrl="/ca/videos" description="Vídeos de ÁBACOS, sindicato de trabajadores del Ayuntamiento de Barcelona.">
+
+  <section class="max-w-5xl mx-auto px-6 py-16">
+
+    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">Multimedia</p>
+    <h1 class="text-3xl font-medium text-[#1a2e4a] mb-10">Vídeos</h1>
+
+    {videosVisibles.length === 0 ? (
+      <p class="text-sm text-gray-400">Pronto habrá vídeos publicados.</p>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {videosVisibles.map((v) => (
+          <div>
+            <div class="rounded-xl overflow-hidden">
+              <VideoEmbed url={v.data.url} />
+            </div>
+            <div class="mt-3">
+              <p class="text-sm font-medium text-[#1a2e4a]">{v.data.titolEs}</p>
+              {v.data.descripcioEs && <p class="text-xs text-gray-400 mt-1 leading-relaxed">{v.data.descripcioEs}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+  </section>
+
+</Layout>

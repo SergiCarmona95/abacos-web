@@ -8,7 +8,7 @@ noticies.sort((a, b) => new Date(b.data.data).getTime() - new Date(a.data.data).
 const ultimas = noticies.slice(0, 5)
 
 const videos = await getCollection('videos')
-const videosVisibles = videos.filter(v => v.data.mostrar)
+const videosVisibles = videos.filter(v => v.data.mostrar).slice(0, 3)
 
 const documents = await getCollection('documents')
 const primersDocs = documents.slice(0, 3)
@@ -111,6 +111,7 @@ const primersDocs = documents.slice(0, 3)
       <div class="max-w-2xl">
         <VideoCarousel videos={videosVisibles} lang="es" />
       </div>
+      <a href="/es/videos" class="inline-block mt-6 text-xs text-[#e63946] hover:underline">Ver todos los vídeos →</a>
     </section>
   )}
 

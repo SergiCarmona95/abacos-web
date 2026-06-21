@@ -23,6 +23,7 @@ const links = {
   quiSom: isCa ? `${prefix}/qui-som` : `${prefix}/quienes-somos`,
   noticies: isCa ? `${prefix}/noticies` : `${prefix}/noticias`,
   documents: isCa ? `${prefix}/documents` : `${prefix}/documentos`,
+  videos: `${prefix}/videos`,
   contacte: isCa ? `${prefix}/contacte` : `${prefix}/contacto`,
   afiliacio: isCa ? `${prefix}/afiliacio` : `${prefix}/afiliacion`,
   avisLegal: isCa ? `${prefix}/avis-legal` : `${prefix}/aviso-legal`,
@@ -121,6 +122,7 @@ const links = {
         <div class="hidden md:flex gap-6">
           <a href={links.quiSom} class="text-sm text-gray-500 hover:text-gray-800">{isCa ? 'Qui som' : 'Quiénes somos'}</a>
           <a href={links.noticies} class="text-sm text-gray-500 hover:text-gray-800">{isCa ? 'Notícies' : 'Noticias'}</a>
+          <a href={links.videos} class="text-sm text-gray-500 hover:text-gray-800">Vídeos</a>
           <a href={links.documents} class="text-sm text-gray-500 hover:text-gray-800">{isCa ? 'Documents' : 'Documentos'}</a>
           <a href={links.contacte} class="text-sm text-gray-500 hover:text-gray-800">{isCa ? 'Contacte' : 'Contacto'}</a>
         </div>
@@ -147,6 +149,7 @@ const links = {
         <div class="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-4">
           <a href={links.quiSom} class="text-sm text-gray-600 hover:text-gray-900">{isCa ? 'Qui som' : 'Quiénes somos'}</a>
           <a href={links.noticies} class="text-sm text-gray-600 hover:text-gray-900">{isCa ? 'Notícies' : 'Noticias'}</a>
+          <a href={links.videos} class="text-sm text-gray-600 hover:text-gray-900">Vídeos</a>
           <a href={links.documents} class="text-sm text-gray-600 hover:text-gray-900">{isCa ? 'Documents' : 'Documentos'}</a>
           <a href={links.contacte} class="text-sm text-gray-600 hover:text-gray-900">{isCa ? 'Contacte' : 'Contacto'}</a>
           <div class="pt-2 border-t border-gray-100">
@@ -183,6 +186,7 @@ const links = {
           <div class="flex flex-col gap-2">
             <a href={links.quiSom} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Qui som' : 'Quiénes somos'}</a>
             <a href={links.noticies} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Notícies' : 'Noticias'}</a>
+            <a href={links.videos} class="text-xs text-gray-400 hover:text-gray-700">Vídeos</a>
             <a href={links.documents} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Documents' : 'Documentos'}</a>
             <a href={links.afiliacio} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? "Afilia't" : 'Afíliate'}</a>
             <a href={links.contacte} class="text-xs text-gray-400 hover:text-gray-700">{isCa ? 'Contacte' : 'Contacto'}</a>
