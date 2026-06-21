@@ -74,12 +74,12 @@ function getThumbnail(url: string) {
   </section>
 
   <!-- Modal -->
-  <div id="video-modal" class="fixed inset-0 z-50 hidden bg-black/90 flex items-center justify-center p-4">
+  <div id="video-modal" class="fixed inset-0 z-50 bg-black/90 items-center justify-center p-4" style="display:none;">
     <div class="relative w-full max-w-2xl">
       <button id="modal-close" class="absolute -top-10 right-0 text-white/70 hover:text-white text-sm flex items-center gap-1.5">
         <i class="ti ti-x"></i> Cerrar
       </button>
-      <div id="modal-content" class="rounded-xl overflow-hidden"></div>
+      <div id="modal-content" class="rounded-xl overflow-hidden max-h-[75vh] overflow-y-auto"></div>
       <div class="mt-3">
         <p id="modal-title" class="text-white text-sm font-medium"></p>
         <p id="modal-desc" class="text-white/60 text-xs mt-1 leading-relaxed"></p>
@@ -128,7 +128,7 @@ function getThumbnail(url: string) {
     modalContent.innerHTML = buildEmbed(url)
     modalTitle.textContent = title
     modalDesc.textContent = desc
-    modal.classList.remove('hidden')
+    ;(modal as HTMLElement).style.display = 'flex'
     document.body.style.overflow = 'hidden'
     if (url.includes('instagram')) setTimeout(loadInstagram, 150)
   }
@@ -136,7 +136,7 @@ function getThumbnail(url: string) {
   function closeModal() {
     if (!modal || !modalContent) return
     modalContent.innerHTML = ''
-    modal.classList.add('hidden')
+    ;(modal as HTMLElement).style.display = 'none'
     document.body.style.overflow = ''
   }
 
