@@ -1,46 +1,135 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import { getCollection } from 'astro:content'
-import VideoEmbed from '../../components/VideoEmbed.astro'
 
 const videos = await getCollection('videos')
 const videosVisibles = videos.filter(v => v.data.mostrar)
+
+function getYouTubeId(url: string) {
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
+  return m ? m[1] : null
+}
+
+function getInstagramId(url: string) {
+  const m = url.match(/instagram\.com\/(?:p|reel)\/([^\/\?]+)/)
+  return m ? m[1] : null
+}
+
+function getThumbnail(url: string) {
+  const ytId = getYouTubeId(url)
+  if (ytId) return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`
+  if (url.includes('cloudinary.com') && url.includes('/video/upload/')) {
+    return url.replace('/video/upload/', '/video/upload/so_0,w_600/').replace(/\.(mp4|webm|ogg)(\?.*)?$/, '.jpg')
+  }
+  return null
+}
 ---
 
 <Layout title="Vídeos" lang="es" altLangUrl="/ca/videos" description="Vídeos de ÁBACOS, sindicato de trabajadores del Ayuntamiento de Barcelona.">
 
   <section class="max-w-xl mx-auto px-4 py-10">
-
     <p class="text-xs tracking-widest text-[#e63946] uppercase mb-2">Multimedia</p>
-    <h1 class="text-2xl font-medium text-[#1a2e4a] mb-8">Vídeos</h1>
+    <h1 class="text-2xl font-medium text-[#1a2e4a] mb-6">Vídeos</h1>
 
     {videosVisibles.length === 0 ? (
       <p class="text-sm text-gray-400">Pronto habrá vídeos publicados.</p>
     ) : (
-      <div class="flex flex-col gap-0">
-        {videosVisibles.map((v) => (
-          <article class="border border-gray-200 rounded-2xl overflow-hidden mb-6">
-            <div class="px-4 py-3 flex items-center gap-2.5 border-b border-gray-100">
-              <div class="w-8 h-8 rounded-full bg-[#1a2e4a] flex items-center justify-center flex-shrink-0">
-                <img src="/abacos-logo.png" alt="ÁBACOS" class="h-4" />
+      <div class="grid grid-cols-3 gap-1">
+        {videosVisibles.map((v) => {
+          const thumb = getThumbnail(v.data.url)
+          const isInstagram = !!getInstagramId(v.data.url)
+          return (
+            <button
+              class="video-card aspect-square relative overflow-hidden rounded bg-[#1a2e4a] group cursor-pointer"
+              data-url={v.data.url}
+              data-title={v.data.titolEs}
+              data-desc={v.data.descripcioEs ?? ''}
+            >
+              {thumb
+                ? <img src={thumb} alt={v.data.titolEs} class="w-full h-full object-cover" />
+                : isInstagram
+                  ? <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#405de6] via-[#e1306c] to-[#f77737]">
+                      <i class="ti ti-brand-instagram text-white text-3xl"></i>
+                    </div>
+                  : <div class="w-full h-full flex items-center justify-center bg-[#1a2e4a]">
+                      <i class="ti ti-video text-white/40 text-3xl"></i>
+                    </div>
+              }
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                <div class="opacity-0 group-hover:opacity-100 transition-opacity w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+                  <i class="ti ti-player-play-filled text-[#1a2e4a] text-base"></i>
+                </div>
               </div>
-              <div>
-                <p class="text-xs font-semibold text-[#1a2e4a]">ÁBACOS</p>
-                <p class="text-xs text-gray-400">Sindicato · Ayuntamiento de Barcelona</p>
-              </div>
-            </div>
-            <VideoEmbed url={v.data.url} />
-            <div class="px-4 py-3">
-              <p class="text-sm font-medium text-gray-900">{v.data.titolEs}</p>
-              {v.data.descripcioEs && (
-                <p class="text-xs text-gray-500 mt-1 leading-relaxed">{v.data.descripcioEs}</p>
-              )}
-            </div>
-          </article>
-        ))}
+            </button>
+          )
+        })}
       </div>
     )}
-
   </section>
 
+  <!-- Modal -->
+  <div id="video-modal" class="fixed inset-0 z-50 hidden bg-black/85 flex items-center justify-center p-4">
+    <div class="relative w-full max-w-2xl">
+      <button id="modal-close" class="absolute -top-10 right-0 text-white/70 hover:text-white text-sm flex items-center gap-1.5">
+        <i class="ti ti-x"></i> Cerrar
+      </button>
+      <div id="modal-title" class="text-white text-sm font-medium mb-3"></div>
+      <div id="modal-content" class="rounded-xl overflow-hidden bg-black"></div>
+      <div id="modal-desc" class="text-white/60 text-xs mt-2"></div>
+    </div>
+  </div>
+
 </Layout>
+
+<script>
+  const modal = document.getElementById('video-modal')
+  const modalContent = document.getElementById('modal-content')
+  const modalTitle = document.getElementById('modal-title')
+  const modalDesc = document.getElementById('modal-desc')
+  const closeBtn = document.getElementById('modal-close')
+
+  function buildEmbed(url: string): string {
+    const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
+    if (ytMatch) {
+      return `<div class="aspect-video"><iframe src="https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&enablejsapi=1" class="w-full h-full" allowfullscreen></iframe></div>`
+    }
+    const igMatch = url.match(/instagram\.com\/(?:p|reel)\/([^\/\?]+)/)
+    if (igMatch) {
+      return `<iframe src="https://www.instagram.com/p/${igMatch[1]}/embed/" class="w-full" style="min-height:520px;border:none;" loading="lazy"></iframe>`
+    }
+    return `<video src="${url}" controls autoplay class="w-full max-h-[70vh]"></video>`
+  }
+
+  function openModal(url: string, title: string, desc: string) {
+    if (!modal || !modalContent || !modalTitle || !modalDesc) return
+    modalTitle.textContent = title
+    modalDesc.textContent = desc
+    modalContent.innerHTML = buildEmbed(url)
+    modal.classList.remove('hidden')
+    document.body.style.overflow = 'hidden'
+  }
+
+  function closeModal() {
+    if (!modal || !modalContent) return
+    modalContent.innerHTML = ''
+    modal.classList.add('hidden')
+    document.body.style.overflow = ''
+  }
+
+  document.querySelectorAll('.video-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const url = (card as HTMLElement).dataset.url ?? ''
+      const title = (card as HTMLElement).dataset.title ?? ''
+      const desc = (card as HTMLElement).dataset.desc ?? ''
+      openModal(url, title, desc)
+    })
+  })
+
+  closeBtn?.addEventListener('click', closeModal)
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal()
+  })
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal()
+  })
+</script>
