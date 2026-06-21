@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro'
-import { getCollection, render } from 'astro:content'
+import { getCollection } from 'astro:content'
 import { marked } from 'marked'
 import VideoEmbed from '../../../components/VideoEmbed.astro'
 
@@ -13,9 +13,10 @@ export async function getStaticPaths() {
 }
 
 const { noticia } = Astro.props
-const { Content } = await render(noticia)
 
-const bodyEsHtml = noticia.data.bodyEs ? await marked(noticia.data.bodyEs) : null
+const rawBodyEs = noticia.data.bodyEs ? noticia.data.bodyEs.replace(/\\([#*\-_`])/g, '$1') : null
+const rawBodyCa = (noticia.body ?? '').replace(/\\([#*\-_`])/g, '$1')
+const bodyEsHtml = rawBodyEs ? await marked(rawBodyEs) : await marked(rawBodyCa)
 ---
 
 <Layout title={noticia.data.titolEs} lang="es" altLangUrl={`/ca/noticies/${noticia.data.identificador}`} description={noticia.data.resumEs}>
@@ -45,10 +46,7 @@ const bodyEsHtml = noticia.data.bodyEs ? await marked(noticia.data.bodyEs) : nul
     )}
 
     <div class="prose prose-sm max-w-none text-gray-600 leading-relaxed">
-      {bodyEsHtml
-        ? <Fragment set:html={bodyEsHtml} />
-        : <Content />
-      }
+      <Fragment set:html={bodyEsHtml} />
     </div>
 
   </article>

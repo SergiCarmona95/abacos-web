@@ -1,7 +1,8 @@
 ---
 import Layout from '../../../layouts/Layout.astro'
-import { getCollection, render } from 'astro:content'
+import { getCollection } from 'astro:content'
 import VideoEmbed from '../../../components/VideoEmbed.astro'
+import { marked } from 'marked'
 
 export async function getStaticPaths() {
   const noticies = await getCollection('noticies')
@@ -12,7 +13,8 @@ export async function getStaticPaths() {
 }
 
 const { noticia } = Astro.props
-const { Content } = await render(noticia)
+const rawBody = (noticia.body ?? '').replace(/\\([#*\-_`])/g, '$1')
+const bodyHtml = await marked(rawBody)
 ---
 
 <Layout title={noticia.data.titol} lang="ca" altLangUrl={`/es/noticias/${noticia.data.identificador}`} description={noticia.data.resum}>
@@ -42,7 +44,7 @@ const { Content } = await render(noticia)
     )}
 
     <div class="prose prose-sm max-w-none text-gray-600 leading-relaxed">
-      <Content />
+      <Fragment set:html={bodyHtml} />
     </div>
 
   </article>
