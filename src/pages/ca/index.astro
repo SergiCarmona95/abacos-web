@@ -1,5 +1,13 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+
+const noticies = await getCollection('noticies')
+noticies.sort((a, b) => new Date(b.data.data).getTime() - new Date(a.data.data).getTime())
+const darreres = noticies.slice(0, 3)
+
+const documents = await getCollection('documents')
+const primersDocs = documents.slice(0, 3)
 ---
 
 <Layout title="Inici" lang="ca" description="ÁBACOS, sindicat de treballadors de l'Ajuntament de Barcelona i Administracions de Catalunya. Defensem els teus drets laborals.">
@@ -74,58 +82,42 @@ import Layout from '../../layouts/Layout.astro'
   <!-- Notícies -->
   <section class="max-w-5xl mx-auto px-6 py-12 border-b border-gray-100">
     <h2 class="text-sm font-medium text-[#1a2e4a] mb-6">Darreres notícies</h2>
-    <div class="flex flex-col divide-y divide-gray-100">
-      <div class="py-4 flex gap-8 items-baseline">
-        <span class="text-xs text-gray-400 min-w-[80px]">03 Jun 2025</span>
-        <div>
-          <p class="text-sm font-medium text-[#1a2e4a] mb-1">Nova convocatòria de mesa de negociació col·lectiva a l'Ajuntament de Barcelona</p>
-          <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Negociació</span>
-        </div>
+    {darreres.length === 0 ? (
+      <p class="text-sm text-gray-400">Aviat hi haurà notícies publicades.</p>
+    ) : (
+      <div class="flex flex-col divide-y divide-gray-100">
+        {darreres.map((n) => (
+          <a href={`/ca/noticies/${n.data.identificador}`} class="py-4 flex gap-8 items-baseline hover:bg-gray-50 -mx-2 px-2 rounded transition-colors group">
+            <span class="text-xs text-gray-400 min-w-[80px] shrink-0">{n.data.data}</span>
+            <div>
+              <p class="text-sm font-medium text-[#1a2e4a] mb-1 group-hover:text-[#e63946] transition-colors">{n.data.titol}</p>
+              <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{n.data.tag}</span>
+            </div>
+          </a>
+        ))}
       </div>
-      <div class="py-4 flex gap-8 items-baseline">
-        <span class="text-xs text-gray-400 min-w-[80px]">28 Mai 2025</span>
-        <div>
-          <p class="text-sm font-medium text-[#1a2e4a] mb-1">Actualització dels permisos i llicències per a empleats públics 2025</p>
-          <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Permisos</span>
-        </div>
-      </div>
-      <div class="py-4 flex gap-8 items-baseline">
-        <span class="text-xs text-gray-400 min-w-[80px]">15 Mai 2025</span>
-        <div>
-          <p class="text-sm font-medium text-[#1a2e4a] mb-1">Assemblea d'afiliats ÁBACOS: resum i acords adoptats</p>
-          <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Assemblea</span>
-        </div>
-      </div>
-    </div>
+    )}
     <a href="/ca/noticies" class="inline-block mt-6 text-xs text-[#e63946] hover:underline">Veure totes les notícies →</a>
   </section>
 
   <!-- Documents -->
   <section class="max-w-5xl mx-auto px-6 py-12">
     <h2 class="text-sm font-medium text-[#1a2e4a] mb-6">Documents i descàrregues</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <a href="/documents/acord-condicions-2021-2024.pdf" class="flex items-center gap-3 border border-gray-100 rounded-lg p-4 hover:border-gray-300 transition-colors">
-        <i class="ti ti-file-type-pdf text-[#e63946] text-xl"></i>
-        <div>
-          <p class="text-sm font-medium text-[#1a2e4a]">Acord condicions 2021–2024</p>
-          <p class="text-xs text-gray-400">PDF · 2.4 MB</p>
-        </div>
-      </a>
-      <a href="/documents/formulari-afiliacio.pdf" class="flex items-center gap-3 border border-gray-100 rounded-lg p-4 hover:border-gray-300 transition-colors">
-        <i class="ti ti-file-type-pdf text-[#e63946] text-xl"></i>
-        <div>
-          <p class="text-sm font-medium text-[#1a2e4a]">Formulari d'afiliació</p>
-          <p class="text-xs text-gray-400">PDF · 180 KB</p>
-        </div>
-      </a>
-      <a href="/documents/permisos-llicencies.pdf" class="flex items-center gap-3 border border-gray-100 rounded-lg p-4 hover:border-gray-300 transition-colors">
-        <i class="ti ti-file-type-pdf text-[#e63946] text-xl"></i>
-        <div>
-          <p class="text-sm font-medium text-[#1a2e4a]">Permisos i llicències</p>
-          <p class="text-xs text-gray-400">PDF · 890 KB</p>
-        </div>
-      </a>
-    </div>
+    {primersDocs.length === 0 ? (
+      <p class="text-sm text-gray-400">Aviat hi haurà documents disponibles.</p>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {primersDocs.map((doc) => (
+          <a href={doc.data.url} target="_blank" class="flex items-center gap-3 border border-gray-100 rounded-lg p-4 hover:border-gray-300 transition-colors">
+            <i class="ti ti-file-type-pdf text-[#e63946] text-xl"></i>
+            <div>
+              <p class="text-sm font-medium text-[#1a2e4a]">{doc.data.nom}</p>
+              <p class="text-xs text-gray-400">PDF · {doc.data.mida}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
   </section>
 
 </Layout>
