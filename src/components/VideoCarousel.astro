@@ -1,0 +1,73 @@
+---
+import VideoEmbed from './VideoEmbed.astro'
+
+interface Props {
+  videos: any[]
+  lang?: string
+}
+
+const { videos, lang = 'ca' } = Astro.props
+---
+
+<div class="vc-carousel">
+  {videos.map((v, i) => (
+    <div class="vc-slide" data-index={i}>
+      <VideoEmbed url={v.data.url} />
+      <div class="mt-3">
+        <p class="text-sm font-medium text-[#1a2e4a]">
+          {lang === 'es' ? v.data.titolEs : v.data.titol}
+        </p>
+        {lang === 'es'
+          ? v.data.descripcioEs && <p class="text-xs text-gray-400 mt-1">{v.data.descripcioEs}</p>
+          : v.data.descripcio && <p class="text-xs text-gray-400 mt-1">{v.data.descripcio}</p>
+        }
+      </div>
+    </div>
+  ))}
+
+  {videos.length > 1 && (
+    <div class="flex items-center justify-between mt-5">
+      <button class="vc-prev flex items-center gap-2 text-xs border border-gray-200 text-[#1a2e4a] px-4 py-2 rounded-lg hover:border-[#1a2e4a] transition-colors">
+        <i class="ti ti-arrow-left"></i>
+        {lang === 'es' ? 'Anterior' : 'Anterior'}
+      </button>
+      <span class="vc-counter text-xs text-gray-400">1 / {videos.length}</span>
+      <button class="vc-next flex items-center gap-2 text-xs border border-gray-200 text-[#1a2e4a] px-4 py-2 rounded-lg hover:border-[#1a2e4a] transition-colors">
+        {lang === 'es' ? 'Siguiente' : 'Següent'}
+        <i class="ti ti-arrow-right"></i>
+      </button>
+    </div>
+  )}
+</div>
+
+<style>
+  .vc-slide {
+    display: none;
+  }
+  .vc-slide.vc-active {
+    display: block;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.vc-carousel').forEach((carousel) => {
+    const slides = [...carousel.querySelectorAll('.vc-slide')]
+    const counter = carousel.querySelector('.vc-counter')
+    const prevBtn = carousel.querySelector('.vc-prev')
+    const nextBtn = carousel.querySelector('.vc-next')
+    let current = 0
+
+    if (slides.length === 0) return
+    slides[0].classList.add('vc-active')
+
+    function goTo(index) {
+      slides[current].classList.remove('vc-active')
+      current = ((index % slides.length) + slides.length) % slides.length
+      slides[current].classList.add('vc-active')
+      if (counter) counter.textContent = `${current + 1} / ${slides.length}`
+    }
+
+    prevBtn?.addEventListener('click', () => goTo(current - 1))
+    nextBtn?.addEventListener('click', () => goTo(current + 1))
+  })
+</script>
