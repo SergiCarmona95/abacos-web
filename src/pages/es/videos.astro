@@ -34,32 +34,38 @@ function getThumbnail(url: string) {
     {videosVisibles.length === 0 ? (
       <p class="text-sm text-gray-400">Pronto habrá vídeos publicados.</p>
     ) : (
-      <div class="grid grid-cols-3 gap-1">
+      <div class="grid grid-cols-3 gap-2">
         {videosVisibles.map((v) => {
           const thumb = getThumbnail(v.data.url)
           const isInstagram = !!getInstagramId(v.data.url)
           return (
             <button
-              class="video-card aspect-square relative overflow-hidden rounded bg-[#1a2e4a] group cursor-pointer"
+              class="video-card text-left group cursor-pointer"
               data-url={v.data.url}
               data-title={v.data.titolEs}
               data-desc={v.data.descripcioEs ?? ''}
             >
-              {thumb
-                ? <img src={thumb} alt={v.data.titolEs} class="w-full h-full object-cover" />
-                : isInstagram
-                  ? <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#405de6] via-[#e1306c] to-[#f77737]">
-                      <i class="ti ti-brand-instagram text-white text-3xl"></i>
-                    </div>
-                  : <div class="w-full h-full flex items-center justify-center bg-[#1a2e4a]">
-                      <i class="ti ti-video text-white/40 text-3xl"></i>
-                    </div>
-              }
-              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                <div class="opacity-0 group-hover:opacity-100 transition-opacity w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
-                  <i class="ti ti-player-play-filled text-[#1a2e4a] text-base"></i>
+              <div class="aspect-square relative overflow-hidden rounded-lg bg-[#1a2e4a]">
+                {thumb
+                  ? <img src={thumb} alt={v.data.titolEs} class="w-full h-full object-cover" />
+                  : isInstagram
+                    ? <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#405de6] via-[#e1306c] to-[#f77737]">
+                        <i class="ti ti-brand-instagram text-white text-3xl"></i>
+                      </div>
+                    : <div class="w-full h-full flex items-center justify-center bg-[#1a2e4a]">
+                        <i class="ti ti-video text-white/40 text-3xl"></i>
+                      </div>
+                }
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                  <div class="opacity-0 group-hover:opacity-100 transition-opacity w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+                    <i class="ti ti-player-play-filled text-[#1a2e4a] text-base"></i>
+                  </div>
                 </div>
               </div>
+              <p class="text-xs font-medium text-[#1a2e4a] mt-1.5 line-clamp-1">{v.data.titolEs}</p>
+              {v.data.descripcioEs && (
+                <p class="text-xs text-gray-400 line-clamp-2 mt-0.5">{v.data.descripcioEs}</p>
+              )}
             </button>
           )
         })}
@@ -68,14 +74,16 @@ function getThumbnail(url: string) {
   </section>
 
   <!-- Modal -->
-  <div id="video-modal" class="fixed inset-0 z-50 hidden bg-black/85 flex items-center justify-center p-4">
+  <div id="video-modal" class="fixed inset-0 z-50 hidden bg-black/90 flex items-center justify-center p-4">
     <div class="relative w-full max-w-2xl">
       <button id="modal-close" class="absolute -top-10 right-0 text-white/70 hover:text-white text-sm flex items-center gap-1.5">
         <i class="ti ti-x"></i> Cerrar
       </button>
-      <div id="modal-title" class="text-white text-sm font-medium mb-3"></div>
-      <div id="modal-content" class="rounded-xl overflow-hidden bg-black"></div>
-      <div id="modal-desc" class="text-white/60 text-xs mt-2"></div>
+      <div id="modal-content" class="rounded-xl overflow-hidden"></div>
+      <div class="mt-3">
+        <p id="modal-title" class="text-white text-sm font-medium"></p>
+        <p id="modal-desc" class="text-white/60 text-xs mt-1 leading-relaxed"></p>
+      </div>
     </div>
   </div>
 
@@ -95,18 +103,34 @@ function getThumbnail(url: string) {
     }
     const igMatch = url.match(/instagram\.com\/(?:p|reel)\/([^\/\?]+)/)
     if (igMatch) {
-      return `<iframe src="https://www.instagram.com/p/${igMatch[1]}/embed/" class="w-full" style="min-height:520px;border:none;" loading="lazy"></iframe>`
+      return `<div style="background:white;border-radius:0.75rem;overflow:hidden;padding:8px;">
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/${igMatch[1]}/" data-instgrm-version="14" style="margin:0 auto;max-width:100%;min-width:auto;width:calc(100% - 2px);"></blockquote>
+      </div>`
     }
-    return `<video src="${url}" controls autoplay class="w-full max-h-[70vh]"></video>`
+    return `<video src="${url}" controls autoplay class="w-full rounded-xl max-h-[70vh]"></video>`
+  }
+
+  function loadInstagram() {
+    const w = window as any
+    if (w.instgrm?.Widgets) {
+      w.instgrm.Widgets.load()
+    } else {
+      const s = document.createElement('script')
+      s.async = true
+      s.src = '//www.instagram.com/embed.js'
+      s.onload = () => w.instgrm?.Widgets?.load()
+      document.body.appendChild(s)
+    }
   }
 
   function openModal(url: string, title: string, desc: string) {
     if (!modal || !modalContent || !modalTitle || !modalDesc) return
+    modalContent.innerHTML = buildEmbed(url)
     modalTitle.textContent = title
     modalDesc.textContent = desc
-    modalContent.innerHTML = buildEmbed(url)
     modal.classList.remove('hidden')
     document.body.style.overflow = 'hidden'
+    if (url.includes('instagram')) setTimeout(loadInstagram, 150)
   }
 
   function closeModal() {
@@ -118,18 +142,12 @@ function getThumbnail(url: string) {
 
   document.querySelectorAll('.video-card').forEach(card => {
     card.addEventListener('click', () => {
-      const url = (card as HTMLElement).dataset.url ?? ''
-      const title = (card as HTMLElement).dataset.title ?? ''
-      const desc = (card as HTMLElement).dataset.desc ?? ''
-      openModal(url, title, desc)
+      const el = card as HTMLElement
+      openModal(el.dataset.url ?? '', el.dataset.title ?? '', el.dataset.desc ?? '')
     })
   })
 
   closeBtn?.addEventListener('click', closeModal)
-  modal?.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal()
-  })
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal()
-  })
+  modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal() })
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal() })
 </script>
