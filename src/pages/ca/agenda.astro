@@ -1,0 +1,51 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+
+const esdeveniments = await getCollection('esdeveniments')
+const visibles = esdeveniments
+  .filter(e => e.data.mostrar)
+  .sort((a, b) => new Date(a.data.data).getTime() - new Date(b.data.data).getTime())
+---
+
+<Layout title="Agenda" lang="ca" altLangUrl="/es/agenda" description="Agenda d'esdeveniments, assemblees i actes d'ÁBACOS, sindicat de treballadors de l'Ajuntament de Barcelona.">
+
+  <section class="max-w-5xl mx-auto px-6 py-16">
+    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">Agenda</p>
+    <h1 class="text-3xl font-medium text-[#1a2e4a] mb-4">Agenda i esdeveniments</h1>
+    <p class="text-sm text-gray-500 leading-relaxed max-w-2xl mb-12">
+      Assemblees, reunions i actes oberts organitzats per ÁBACOS.
+    </p>
+
+    {visibles.length === 0 ? (
+      <p class="text-sm text-gray-400">Aviat hi haurà esdeveniments publicats.</p>
+    ) : (
+      <div class="flex flex-col gap-6">
+        {visibles.map((e) => (
+          <div class="border border-gray-100 rounded-xl p-6 bg-gray-50 flex flex-col md:flex-row gap-4 md:gap-8">
+            <div class="shrink-0 md:w-40">
+              <p class="text-sm font-medium text-[#1a2e4a]">{e.data.data}</p>
+              {e.data.hora && <p class="text-xs text-gray-400 mt-0.5">{e.data.hora}</p>}
+              {e.data.lloc && (
+                <p class="text-xs text-gray-400 mt-2 flex items-start gap-1.5">
+                  <i class="ti ti-map-pin mt-0.5"></i> {e.data.lloc}
+                </p>
+              )}
+            </div>
+            <div class="flex-1">
+              <h2 class="text-base font-medium text-[#1a2e4a] mb-2">{e.data.titol}</h2>
+              {e.data.descripcio && <p class="text-sm text-gray-500 leading-relaxed">{e.data.descripcio}</p>}
+              {e.data.enllac && (
+                <a href={e.data.enllac} target="_blank" class="inline-flex items-center gap-1.5 text-xs text-[#e63946] mt-3 hover:underline">
+                  Més informació <i class="ti ti-arrow-up-right"></i>
+                </a>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+  </section>
+
+</Layout>

@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="Pàgina no trobada" lang="ca" description="Pàgina no trobada / Página no encontrada" altLangUrl="/404">
+
+  <section class="max-w-2xl mx-auto px-6 py-24 text-center">
+
+    <div class="flex justify-center gap-2 mb-6">
+      <span class="w-3 h-3 rounded-full" style="background:#e63946"></span>
+      <span class="w-3 h-3 rounded-full" style="background:#f4a15d"></span>
+      <span class="w-3 h-3 rounded-full" style="background:#f0c93d"></span>
+      <span class="w-3 h-3 rounded-full" style="background:#3fa9a4"></span>
+    </div>
+
+    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">Error 404</p>
+    <h1 class="text-4xl md:text-5xl font-medium text-[#1a2e4a] mb-2">Pàgina no trobada</h1>
+    <p class="text-sm text-gray-400 mb-10">Página no encontrada</p>
+
+    <p class="text-sm text-gray-500 leading-relaxed max-w-md mx-auto mb-10">
+      Sembla que aquesta pàgina no existeix o s'ha mogut d'ubicació.<br/>
+      Parece que esta página no existe o se ha movido de ubicación.
+    </p>
+
+    <a href="/ca/" class="inline-block bg-[#1a2e4a] text-white text-sm px-6 py-3 rounded-lg hover:bg-[#243d5e] transition-colors mb-8">
+      Tornar a l'inici
+    </a>
+
+    <div class="flex flex-wrap gap-4 justify-center text-xs text-gray-400">
+      <a href="/ca/noticies" class="hover:text-gray-700 underline">Notícies</a>
+      <a href="/ca/documents" class="hover:text-gray-700 underline">Documents</a>
+      <a href="/ca/afiliacio" class="hover:text-gray-700 underline">Afilia't</a>
+      <a href="/ca/contacte" class="hover:text-gray-700 underline">Contacte</a>
+    </div>
+
+  </section>
+
+</Layout>

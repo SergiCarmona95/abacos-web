@@ -28,6 +28,7 @@ const videos = defineCollection({
     url: z.string(),
     descripcio: z.string().optional(),
     descripcioEs: z.string().optional(),
+    imatge: z.string().optional(),
     mostrar: z.boolean(),
   })
 })
@@ -45,4 +46,20 @@ const documents = defineCollection({
   })
 })
 
-export const collections = { noticies, videos, documents }
+const esdeveniments = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/esdeveniments' }),
+  schema: z.object({
+    identificador: z.string(),
+    titol: z.string(),
+    titolEs: z.string(),
+    data: z.string(),
+    hora: z.string().optional(),
+    lloc: z.string().optional(),
+    descripcio: z.string().optional(),
+    descripcioEs: z.string().optional(),
+    enllac: z.string().optional(),
+    mostrar: z.boolean(),
+  })
+})
+
+export const collections = { noticies, videos, documents, esdeveniments }

@@ -48,6 +48,7 @@ collections:
       - { label: "Fitxer de vídeo", name: url, widget: file, media_library: { name: cloudinary, config: { cloud_name: djjzvuuzh, api_key: 998266795964365 } } }
       - { label: "Descripció (CA)", name: descripcio, widget: text, required: false }
       - { label: "Descripció (ES)", name: descripcioEs, widget: text, required: false }
+      - { label: "Miniatura", name: imatge, widget: image, required: false, hint: "Imatge de portada del vídeo. IMPRESCINDIBLE per als vídeos d'Instagram (Instagram no permet generar-la automàticament). Format quadrat recomanat." }
       - { label: "Mostrar a la web", name: mostrar, widget: boolean, default: true }
 
   - name: documents
@@ -64,3 +65,21 @@ collections:
       - { label: "Categoria (ES)", name: categoriaEs, widget: select, options: ["Convenios", "Permisos y licencias", "Afiliación", "Otros"] }
       - { label: "Mida", name: mida, widget: string, hint: "Ex: 2.4 MB" }
       - { label: "Fitxer PDF", name: url, widget: file, media_folder: /public/uploads/documents, public_folder: /uploads/documents }
+
+  - name: esdeveniments
+    label: Agenda
+    folder: src/content/esdeveniments
+    create: true
+    identifier_field: identificador
+    slug: "{{identificador}}"
+    fields:
+      - { label: "Identificador (slug)", name: identificador, widget: string, hint: "Identificador únic sense espais ni accents. Ex: assemblea-juny-2026" }
+      - { label: "Títol (CA)", name: titol, widget: string }
+      - { label: "Títol (ES)", name: titolEs, widget: string }
+      - { label: "Data", name: data, widget: datetime, format: "DD MMM YYYY", date_format: "DD MMM YYYY", time_format: false }
+      - { label: "Hora", name: hora, widget: string, required: false, hint: "Ex: 18:00h" }
+      - { label: "Lloc", name: lloc, widget: string, required: false, hint: "Ex: Plaça Universitat 3, Barcelona" }
+      - { label: "Descripció (CA)", name: descripcio, widget: text, required: false }
+      - { label: "Descripció (ES)", name: descripcioEs, widget: text, required: false }
+      - { label: "Enllaç (opcional)", name: enllac, widget: string, required: false, hint: "Enllaç a més informació, formulari d'inscripció, etc." }
+      - { label: "Mostrar a la web", name: mostrar, widget: boolean, default: true }

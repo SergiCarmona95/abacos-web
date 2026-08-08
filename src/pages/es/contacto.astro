@@ -66,17 +66,9 @@ import Layout from '../../layouts/Layout.astro'
         <div>
           <h2 class="text-sm font-medium text-[#1a2e4a] mb-4">Redes sociales</h2>
           <div class="flex gap-3">
-            <a href="https://www.facebook.com/" target="_blank" title="Facebook" class="group relative w-10 h-10 rounded-lg flex items-center justify-center text-white transition-all hover:opacity-80" style="background:#1877F2">
-              <i class="ti ti-brand-facebook text-lg"></i>
-              <span class="absolute -bottom-7 left-1/2 -translate-x-1/2 text-xs text-white bg-[#1a2e4a] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Facebook</span>
-            </a>
-            <a href="https://www.instagram.com/" target="_blank" title="Instagram" class="group relative w-10 h-10 rounded-lg flex items-center justify-center text-white transition-all hover:opacity-80" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)">
+            <a href="https://www.instagram.com/abacos.bressol.bcn/" target="_blank" rel="noopener" title="Instagram" class="group relative w-10 h-10 rounded-lg flex items-center justify-center text-white transition-all hover:opacity-80" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)">
               <i class="ti ti-brand-instagram text-lg"></i>
               <span class="absolute -bottom-7 left-1/2 -translate-x-1/2 text-xs text-white bg-[#1a2e4a] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Instagram</span>
-            </a>
-            <a href="https://www.twitter.com/" target="_blank" title="Twitter / X" class="group relative w-10 h-10 rounded-lg flex items-center justify-center text-white transition-all hover:opacity-80" style="background:#000">
-              <i class="ti ti-brand-x text-lg"></i>
-              <span class="absolute -bottom-7 left-1/2 -translate-x-1/2 text-xs text-white bg-[#1a2e4a] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Twitter / X</span>
             </a>
           </div>
         </div>
@@ -85,7 +77,12 @@ import Layout from '../../layouts/Layout.astro'
       <!-- Formulario -->
       <div>
         <h2 class="text-sm font-medium text-[#1a2e4a] mb-4">Envíanos un mensaje</h2>
-        <form class="flex flex-col gap-4" action="#" method="POST">
+        <form id="contact-form" name="contacto" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="flex flex-col gap-4">
+
+          <input type="hidden" name="form-name" value="contacto" />
+          <p class="hidden" aria-hidden="true">
+            <label>No rellenes esto si eres humano: <input name="bot-field" /></label>
+          </p>
 
           <div class="flex flex-col gap-1">
             <label class="text-xs text-gray-400">Nombre completo *</label>
@@ -122,6 +119,8 @@ import Layout from '../../layouts/Layout.astro'
             Enviar mensaje →
           </button>
 
+          <p id="form-status" class="text-sm hidden"></p>
+
         </form>
       </div>
 
@@ -129,3 +128,28 @@ import Layout from '../../layouts/Layout.astro'
   </section>
 
 </Layout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null
+  const status = document.getElementById('form-status')
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    if (!status) return
+    const formData = new FormData(form)
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as any).toString(),
+      })
+      if (!response.ok) throw new Error('Network error')
+      form.reset()
+      status.textContent = "Mensaje enviado correctamente. Te responderemos lo antes posible."
+      status.className = 'text-sm text-green-600'
+    } catch (err) {
+      status.textContent = "Ha habido un error al enviar el mensaje. Vuelve a intentarlo o escríbenos a abacos@abacos.website."
+      status.className = 'text-sm text-red-600'
+    }
+  })
+</script>

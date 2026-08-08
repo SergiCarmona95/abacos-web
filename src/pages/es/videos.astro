@@ -11,15 +11,21 @@ function getYouTubeId(url: string) {
 }
 
 function getInstagramId(url: string) {
-  const m = url.match(/instagram\.com\/(?:p|reel)\/([^\/\?]+)/)
+  const m = url.match(/instagram\.com\/(?:p|reel|reels)\/([^\/\?]+)/)
   return m ? m[1] : null
 }
 
-function getThumbnail(url: string) {
-  const ytId = getYouTubeId(url)
+function getThumbnail(v: any) {
+  // 1. Miniatura subida manualmente en el CMS (prioridad máxima)
+  if (v.data.imatge) return v.data.imatge
+  // 2. YouTube: miniatura automática
+  const ytId = getYouTubeId(v.data.url)
   if (ytId) return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`
-  if (url.includes('cloudinary.com') && url.includes('/video/upload/')) {
-    return url.replace('/video/upload/', '/video/upload/so_0,w_600/').replace(/\.(mp4|webm|ogg)(\?.*)?$/, '.jpg')
+  // 3. Cloudinary: primer fotograma del vídeo
+  if (v.data.url.includes('cloudinary.com') && v.data.url.includes('/video/upload/')) {
+    return v.data.url
+      .replace('/video/upload/', '/video/upload/so_0,w_600,h_600,c_fill/')
+      .replace(/\.(mp4|webm|ogg|mov)(\?.*)?$/, '.jpg')
   }
   return null
 }
@@ -27,16 +33,19 @@ function getThumbnail(url: string) {
 
 <Layout title="Vídeos" lang="es" altLangUrl="/ca/videos" description="Vídeos de ÁBACOS, sindicato de trabajadores del Ayuntamiento de Barcelona.">
 
-  <section class="max-w-xl mx-auto px-4 py-10">
-    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-2">Multimedia</p>
-    <h1 class="text-2xl font-medium text-[#1a2e4a] mb-6">Vídeos</h1>
+  <section class="max-w-4xl mx-auto px-6 py-16">
+    <p class="text-xs tracking-widest text-[#e63946] uppercase mb-3">Multimedia</p>
+    <h1 class="text-3xl font-medium text-[#1a2e4a] mb-4">Vídeos</h1>
+    <p class="text-sm text-gray-500 leading-relaxed max-w-2xl mb-12">
+      Asambleas, movilizaciones y comunicados en vídeo de ÁBACOS.
+    </p>
 
     {videosVisibles.length === 0 ? (
       <p class="text-sm text-gray-400">Pronto habrá vídeos publicados.</p>
     ) : (
-      <div class="grid grid-cols-3 gap-2">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
         {videosVisibles.map((v) => {
-          const thumb = getThumbnail(v.data.url)
+          const thumb = getThumbnail(v)
           const isInstagram = !!getInstagramId(v.data.url)
           return (
             <button
@@ -45,26 +54,35 @@ function getThumbnail(url: string) {
               data-title={v.data.titolEs}
               data-desc={v.data.descripcioEs ?? ''}
             >
-              <div class="aspect-square relative overflow-hidden rounded-lg bg-[#1a2e4a]">
+              <div class="aspect-square relative overflow-hidden rounded-xl bg-[#1a2e4a] border border-gray-100">
                 {thumb
-                  ? <img src={thumb} alt={v.data.titolEs} class="w-full h-full object-cover" />
-                  : isInstagram
-                    ? <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#405de6] via-[#e1306c] to-[#f77737]">
-                        <i class="ti ti-brand-instagram text-white text-3xl"></i>
-                      </div>
-                    : <div class="w-full h-full flex items-center justify-center bg-[#1a2e4a]">
-                        <i class="ti ti-video text-white/40 text-3xl"></i>
-                      </div>
+                  ? <img src={thumb} alt={v.data.titolEs} loading="lazy" class="w-full h-full object-cover" />
+                  : <div class="w-full h-full flex flex-col items-center justify-center gap-2 bg-[#1a2e4a]">
+                      <i class={`ti ${isInstagram ? 'ti-brand-instagram' : 'ti-video'} text-white/50 text-3xl`}></i>
+                      <span class="text-[10px] uppercase tracking-widest text-white/40">
+                        {isInstagram ? 'Instagram' : 'Vídeo'}
+                      </span>
+                    </div>
                 }
-                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                  <div class="opacity-0 group-hover:opacity-100 transition-opacity w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
-                    <i class="ti ti-player-play-filled text-[#1a2e4a] text-base"></i>
+
+                <!-- Capa hover con botón play -->
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/45 transition-colors flex items-center justify-center">
+                  <div class="opacity-0 group-hover:opacity-100 transition-opacity w-12 h-12 rounded-full bg-white/95 flex items-center justify-center shadow-lg">
+                    <i class="ti ti-player-play-filled text-[#1a2e4a] text-lg"></i>
                   </div>
                 </div>
+
+                <!-- Distintivo Instagram -->
+                {isInstagram && (
+                  <div class="absolute top-2 right-2 w-6 h-6 rounded-md bg-black/50 backdrop-blur flex items-center justify-center">
+                    <i class="ti ti-brand-instagram text-white text-xs"></i>
+                  </div>
+                )}
               </div>
-              <p class="text-xs font-medium text-[#1a2e4a] mt-1.5 line-clamp-1">{v.data.titolEs}</p>
+
+              <p class="text-sm font-medium text-[#1a2e4a] mt-2 leading-snug line-clamp-2">{v.data.titolEs}</p>
               {v.data.descripcioEs && (
-                <p class="text-xs text-gray-400 line-clamp-2 mt-0.5">{v.data.descripcioEs}</p>
+                <p class="text-xs text-gray-400 line-clamp-2 mt-0.5 leading-relaxed">{v.data.descripcioEs}</p>
               )}
             </button>
           )
@@ -74,16 +92,26 @@ function getThumbnail(url: string) {
   </section>
 
   <!-- Modal -->
-  <div id="video-modal" class="fixed inset-0 z-50 bg-black/90 items-center justify-center p-4" style="display:none;">
-    <div class="relative w-full max-w-2xl">
-      <button id="modal-close" class="absolute -top-10 right-0 text-white/70 hover:text-white text-sm flex items-center gap-1.5">
-        <i class="ti ti-x"></i> Cerrar
-      </button>
-      <div id="modal-content" class="rounded-xl overflow-hidden max-h-[75vh] overflow-y-auto"></div>
-      <div class="mt-3">
-        <p id="modal-title" class="text-white text-sm font-medium"></p>
-        <p id="modal-desc" class="text-white/60 text-xs mt-1 leading-relaxed"></p>
+  <div id="video-modal" class="fixed inset-0 z-[100] bg-[#0b1220]/97 items-center justify-center p-4 sm:p-6" style="display:none;">
+    <div class="relative w-full max-w-lg flex flex-col" style="max-height:92vh;">
+
+      <div class="flex justify-end mb-2 shrink-0">
+        <button id="modal-close" class="text-white/70 hover:text-white text-sm flex items-center gap-1.5 px-2 py-1">
+          <i class="ti ti-x"></i> Cerrar
+        </button>
       </div>
+
+      <div id="modal-content" class="min-h-0 flex-1 overflow-y-auto rounded-xl"></div>
+
+      <div class="mt-3 shrink-0">
+        <p id="modal-title" class="text-white text-sm font-medium leading-snug"></p>
+        <p id="modal-desc" class="text-white/60 text-xs mt-1 leading-relaxed"></p>
+        <a id="modal-external" href="#" target="_blank" rel="noopener"
+           class="hidden items-center gap-1.5 text-xs text-white/70 hover:text-white mt-2 underline">
+          <i class="ti ti-brand-instagram"></i> Ver la publicación en Instagram
+        </a>
+      </div>
+
     </div>
   </div>
 
@@ -94,20 +122,33 @@ function getThumbnail(url: string) {
   const modalContent = document.getElementById('modal-content')
   const modalTitle = document.getElementById('modal-title')
   const modalDesc = document.getElementById('modal-desc')
+  const modalExternal = document.getElementById('modal-external') as HTMLAnchorElement | null
   const closeBtn = document.getElementById('modal-close')
+
+  function getInstagramId(url: string) {
+    const m = url.match(/instagram\.com\/(?:p|reel|reels)\/([^\/\?]+)/)
+    return m ? m[1] : null
+  }
 
   function buildEmbed(url: string): string {
     const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
     if (ytMatch) {
-      return `<div class="aspect-video"><iframe src="https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&enablejsapi=1" class="w-full h-full" allowfullscreen></iframe></div>`
+      return `<div class="aspect-video w-full"><iframe src="https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&enablejsapi=1" class="w-full h-full rounded-xl" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`
     }
-    const igMatch = url.match(/instagram\.com\/(?:p|reel)\/([^\/\?]+)/)
-    if (igMatch) {
-      return `<div style="background:white;border-radius:0.75rem;overflow:hidden;max-height:70vh;overflow-y:auto;">
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/${igMatch[1]}/" data-instgrm-version="14" style="margin:0 auto;max-width:100%;min-width:auto;width:100%;"></blockquote>
+
+    const igId = getInstagramId(url)
+    if (igId) {
+      // Instagram sustituye el blockquote por un iframe propio. Lo limitamos
+      // al ancho natural de su embed para que no desborde el modal.
+      return `<div style="background:#fff;border-radius:0.75rem;overflow:hidden;max-width:400px;margin:0 auto;">
+        <blockquote class="instagram-media"
+          data-instgrm-permalink="https://www.instagram.com/p/${igId}/"
+          data-instgrm-version="14"
+          style="margin:0;padding:0;border:0;box-shadow:none;width:100%;min-width:0;max-width:100%;"></blockquote>
       </div>`
     }
-    return `<video src="${url}" controls autoplay class="w-full rounded-xl max-h-[70vh]"></video>`
+
+    return `<video src="${url}" controls autoplay playsinline class="w-full rounded-xl bg-black" style="max-height:78vh;"></video>`
   }
 
   function loadInstagram() {
@@ -115,9 +156,12 @@ function getThumbnail(url: string) {
     if (w.instgrm?.Widgets) {
       w.instgrm.Widgets.load()
     } else {
+      const existing = document.getElementById('ig-embed-script')
+      if (existing) return
       const s = document.createElement('script')
+      s.id = 'ig-embed-script'
       s.async = true
-      s.src = '//www.instagram.com/embed.js'
+      s.src = 'https://www.instagram.com/embed.js'
       s.onload = () => (window as any).instgrm?.Widgets?.load()
       document.body.appendChild(s)
     }
@@ -125,12 +169,29 @@ function getThumbnail(url: string) {
 
   function openModal(url: string, title: string, desc: string) {
     if (!modal || !modalContent || !modalTitle || !modalDesc) return
+
     modalContent.innerHTML = buildEmbed(url)
     modalTitle.textContent = title
     modalDesc.textContent = desc
+    modalDesc.style.display = desc ? 'block' : 'none'
+
+    // Enlace directo a Instagram como alternativa si el embed falla
+    const igId = getInstagramId(url)
+    if (modalExternal) {
+      if (igId) {
+        modalExternal.href = `https://www.instagram.com/p/${igId}/`
+        modalExternal.classList.remove('hidden')
+        modalExternal.classList.add('inline-flex')
+      } else {
+        modalExternal.classList.add('hidden')
+        modalExternal.classList.remove('inline-flex')
+      }
+    }
+
     ;(modal as HTMLElement).style.display = 'flex'
     document.body.style.overflow = 'hidden'
-    if (url.includes('instagram')) setTimeout(loadInstagram, 100)
+
+    if (igId) setTimeout(loadInstagram, 50)
   }
 
   function closeModal() {

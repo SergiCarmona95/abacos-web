@@ -11,7 +11,7 @@ function getYouTubeId(url: string) {
 }
 
 function getInstagramId(url: string) {
-  const match = url.match(/instagram\.com\/(?:p|reel)\/([^\/\?]+)/)
+  const match = url.match(/instagram\.com\/(?:p|reel|reels)\/([^\/\?]+)/)
   return match ? match[1] : null
 }
 
@@ -25,20 +25,50 @@ const isCloudinary = url.includes('cloudinary.com') || url.includes('res.cloudin
     <iframe
       src={`https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`}
       class="w-full h-full rounded-xl"
+      allow="encrypted-media"
       allowfullscreen
     />
   </div>
 )}
 
 {instagramId && (
-  <blockquote
-    class="instagram-media w-full"
-    data-instgrm-permalink={`https://www.instagram.com/p/${instagramId}/`}
-    data-instgrm-version="14"
-  />
-  <script is:inline async src="//www.instagram.com/embed.js" />
+  <div class="ig-wrapper mx-auto w-full" style="max-width:400px;">
+    <blockquote
+      class="instagram-media w-full"
+      data-instgrm-permalink={`https://www.instagram.com/p/${instagramId}/`}
+      data-instgrm-version="14"
+      style="margin:0;padding:0;border:0;box-shadow:none;min-width:0;max-width:100%;"
+    />
+  </div>
 )}
 
 {(isCloudinary || (!youtubeId && !instagramId)) && (
-  <video src={url} controls class="w-full rounded-xl max-h-96" />
+  <video src={url} controls playsinline class="w-full rounded-xl bg-black" style="max-height:70vh;" />
+)}
+
+{instagramId && (
+  <script is:inline>
+    (function () {
+      function loadIG() {
+        if (window.instgrm && window.instgrm.Widgets) {
+          window.instgrm.Widgets.load()
+          return
+        }
+        if (document.getElementById('ig-embed-script')) return
+        var s = document.createElement('script')
+        s.id = 'ig-embed-script'
+        s.async = true
+        s.src = 'https://www.instagram.com/embed.js'
+        s.onload = function () {
+          if (window.instgrm && window.instgrm.Widgets) window.instgrm.Widgets.load()
+        }
+        document.body.appendChild(s)
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadIG)
+      } else {
+        loadIG()
+      }
+    })()
+  </script>
 )}
